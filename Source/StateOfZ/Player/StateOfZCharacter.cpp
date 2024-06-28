@@ -220,7 +220,7 @@ void AStateOfZCharacter::PerformVault()
 
 				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
 
-				vaultLocation = hitResult.ImpactPoint + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 100.0f) + vaultOffset;
+				vaultLocation = hitResult.ImpactPoint + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 100.0f);
 
 				DrawDebugSphere(GetWorld(), vaultLocation, 30.0f, 12, FColor::Red, false, 5.0f);
 			}
@@ -229,7 +229,7 @@ void AStateOfZCharacter::PerformVault()
 				UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
 
 				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + (vaultAdditionalOffset * 10.f));
-				vaultLocation = hitResult.ImpactPoint + vaultOffset;
+				vaultLocation = hitResult.ImpactPoint + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 20.0f) + vaultOffset;
 			}
 
 			ClearToVaultCheck(vaultLocation, collisionParams);
@@ -248,9 +248,30 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 	if (bClearToVault)
 	{
 		UE_LOG(LogTemplateCharacter, Log, TEXT("clear to vault"));
-		SetActorLocation(vaultLocation);
+
+		FVector downRayStart = vaultLocation;
+		FVector downRayEnd = vaultLocation - FVector(0.0f, 0.0f,1000.0f);
+
+		FHitResult downRayHitResult;
+		bool bDownHit = GetWorld()->LineTraceSingleByChannel(downRayHitResult, downRayStart, downRayEnd, ECC_Visibility, collisionParams);
+		DrawDebugLine(GetWorld(), downRayStart, downRayEnd, FColor::Yellow, false, 1, 0, 1);
+
+		if(bDownHit)
+		{
+			FVector finalVaultLocation = downRayHitResult.ImpactPoint;
+			UE_LOG(LogTemplateCharacter, Log, TEXT("Downward ray hit surface, setting final vault location"));
+
+			targetVaultPosition = finalVaultLocation;
+		}
+		else
+		{
+			targetVaultPosition = vaultLocation;
+		}
 		bIsJumping = false;
-		targetVaultPosition = vaultLocation;
+
+		targetVaultPosition.Z += (GetMesh()->GetRelativeLocation().Z * -1.0f);
+		
+		SetActorLocation(targetVaultPosition); 
 	}
 	else
 	{
