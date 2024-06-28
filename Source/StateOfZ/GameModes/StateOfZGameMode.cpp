@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "StateOfZGameMode.h"
-#include "StateOfZCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AStateOfZGameMode::AStateOfZGameMode()

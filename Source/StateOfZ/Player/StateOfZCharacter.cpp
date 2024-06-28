@@ -228,8 +228,7 @@ void AStateOfZCharacter::PerformVault()
 			{
 				UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
 
-				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + vaultAdditionalOffset);
-
+				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + (vaultAdditionalOffset * 10.f));
 				vaultLocation = hitResult.ImpactPoint + vaultOffset;
 			}
 
