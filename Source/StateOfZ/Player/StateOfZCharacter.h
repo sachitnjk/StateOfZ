@@ -65,6 +65,16 @@ public:
 
 private:
 	bool bIsJumping;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
+	float VaultCheckForwardRayLength = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
+	float MaxVaultHight = 145.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
+	float VaultForwardOffest = 55.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
+	float VaultFenceForwardOffest = 135.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
+	float VaultSurfaceFinderDownRayLength = 1000.f;
 
 protected:
 
@@ -81,8 +91,6 @@ protected:
 	/** Called for looking Interact Input */
 	void Interact();
 
-	float vaultRayLength;
-	float vaultAdditionalOffset;
 	FVector targetVaultPosition;
 	FVector vaultOffset;
 

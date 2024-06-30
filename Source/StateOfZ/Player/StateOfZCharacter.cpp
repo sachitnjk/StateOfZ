@@ -55,10 +55,7 @@ AStateOfZCharacter::AStateOfZCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	vaultRayLength = 100.0f;
-	vaultAdditionalOffset = 10.0f;
 	bIsJumping = false;
-	
 }
 
 void AStateOfZCharacter::BeginPlay()
@@ -201,7 +198,7 @@ void AStateOfZCharacter::PerformVault()
 	if (bIsJumping)
 	{
 		FVector rayStart = GetActorLocation() + rayDetectionPoint;
-		FVector rayEnd = rayStart + (GetActorForwardVector() * vaultRayLength);
+		FVector rayEnd = rayStart + (GetActorForwardVector() * VaultCheckForwardRayLength);
 
 		FHitResult hitResult;
 		FCollisionQueryParams collisionParams;
@@ -218,9 +215,9 @@ void AStateOfZCharacter::PerformVault()
 			{
 				UE_LOG(LogTemplateCharacter, Log, TEXT("fence detected, tryng to vault"));
 
-				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+				vaultOffset = (GetActorForwardVector() * VaultFenceForwardOffest);
 
-				vaultLocation = hitResult.ImpactPoint + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 100.0f);
+				vaultLocation = hitResult.ImpactPoint + vaultOffset;
 
 				DrawDebugSphere(GetWorld(), vaultLocation, 30.0f, 12, FColor::Red, false, 5.0f);
 			}
@@ -228,8 +225,8 @@ void AStateOfZCharacter::PerformVault()
 			{
 				UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
 
-				vaultOffset = FVector(0.0f, 0.0f, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + (vaultAdditionalOffset * 10.f));
-				vaultLocation = hitResult.ImpactPoint + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 20.0f) + vaultOffset;
+				vaultOffset = (GetActorForwardVector() * VaultForwardOffest) + FVector(0.0f, 0.0f, MaxVaultHight);
+				vaultLocation = hitResult.ImpactPoint + vaultOffset;
 			}
 
 			ClearToVaultCheck(vaultLocation, collisionParams);
@@ -250,7 +247,7 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 		UE_LOG(LogTemplateCharacter, Log, TEXT("clear to vault"));
 
 		FVector downRayStart = vaultLocation;
-		FVector downRayEnd = vaultLocation - FVector(0.0f, 0.0f,1000.0f);
+		FVector downRayEnd = vaultLocation - FVector(0.0f, 0.0f,VaultSurfaceFinderDownRayLength);
 
 		FHitResult downRayHitResult;
 		bool bDownHit = GetWorld()->LineTraceSingleByChannel(downRayHitResult, downRayStart, downRayEnd, ECC_Visibility, collisionParams);
@@ -269,6 +266,7 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 		}
 		bIsJumping = false;
 
+		// Getting the offset of the mesh as pivot of the BP will be at center and this offset need to be added back (Hack)
 		targetVaultPosition.Z += (GetMesh()->GetRelativeLocation().Z * -1.0f);
 		
 		SetActorLocation(targetVaultPosition); 
