@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "StateOfZ/SearchBox.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -68,8 +69,8 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	InteractCheck();
 	VaultCheck();
-	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -144,32 +145,51 @@ void AStateOfZCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AStateOfZCharacter::Interact()
+void AStateOfZCharacter::InteractCheck()
 {
-	SpawnActor();
-}
+	FCollisionQueryParams collisionParams;
+	collisionParams.AddIgnoredActor(this);
 
-void AStateOfZCharacter::SpawnActor()
-{
-	if (!actorBPToSpawn)
+	FHitResult hitResult;
+	//FVector interactionRayPoint = FollowCamera->GetComponentLocation();
+	FVector interactionRayPoint = GetActorLocation();
+	FVector interactionRayEnd = interactionRayPoint + (FollowCamera->GetForwardVector() * maxInteractRayDistance);
+	
+	bool bCanInteract = GetWorld()->LineTraceSingleByChannel(hitResult, interactionRayPoint, interactionRayEnd, ECC_Visibility, collisionParams);
+	// DrawDebugLine(GetWorld(), interactionRayPoint, interactionRayEnd, FColor::Yellow, false, 5, 0, 1);
+	
+	if(bCanInteract)
 	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("actorBPToSpawn is not set!"));
-		return;
-	}
+		AActor* hitActor = hitResult.GetActor();
+		if(hitActor && hitActor->IsA(ASearchBox::StaticClass())/**&& hitActor inplements interactable interface*/)
+		{
+			currentInteractable = hitActor;
 
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-
-	AActor* spawnedActor = GetWorld()->SpawnActor<AActor>(actorBPToSpawn, GetActorTransform(), spawnParams);
-
-	if(spawnedActor)
-	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("Actor Spawned successfulyy"));
+			ASearchBox* searchBoxOnCurrent = Cast<ASearchBox>(currentInteractable);
+			if(searchBoxOnCurrent)
+			{
+				searchBoxOnCurrent->OnHover();
+			}
+			// UE_LOG(LogTemplateCharacter, Log, TEXT("current Interactable Actor Set: %s"), *hitActor->GetName());
+		}
+		else
+		{
+			currentInteractable = nullptr;
+			return;
+		}
 	}
 	else
 	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("Actor not spawned"));
+		currentInteractable = nullptr;
+	}
+}
+
+
+void AStateOfZCharacter::Interact()
+{
+	if(currentInteractable)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
 	}
 }
 

@@ -51,17 +51,17 @@ class AStateOfZCharacter : public ACharacter
 
 public:
 	AStateOfZCharacter();
-
-	void SpawnActor();
-
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<AActor> actorBPToSpawn;
-
+	
 	UPROPERTY(EditAnywhere)
 		float vaultInterpSpeed = 5.0f;
 
 	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
 		FVector rayDetectionPoint;
+
+	// UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
+	// 	FVector interactionRayPoint;
+	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
+		float maxInteractRayDistance = 10.0f;
 
 private:
 	bool bIsJumping;
@@ -75,6 +75,8 @@ private:
 	float VaultFenceForwardOffest = 135.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
 	float VaultSurfaceFinderDownRayLength = 1000.f;
+
+	AActor* currentInteractable;
 
 protected:
 
@@ -90,6 +92,7 @@ protected:
 	
 	/** Called for looking Interact Input */
 	void Interact();
+	void InteractCheck();
 
 	FVector targetVaultPosition;
 	FVector vaultOffset;
