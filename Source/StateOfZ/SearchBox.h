@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
+#include "Interfaces/Interactable.h"
 #include "SearchBox.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class STATEOFZ_API USearchBox : public UBoxComponent
+class STATEOFZ_API USearchBox : public UBoxComponent, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -15,8 +16,8 @@ public:
 	// Sets default values for this actor's properties
 	USearchBox();
 
-	void OnHover();
-	void OnInteract();
+	virtual void OnHover() override;
+	virtual void OnInteract() override;
 
 protected:
 	// Called when the game starts or when spawned

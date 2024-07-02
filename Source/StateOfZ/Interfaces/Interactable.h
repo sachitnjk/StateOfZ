@@ -1,0 +1,21 @@
+﻿#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
+#include "Interactable.generated.h"
+
+UINTERFACE(MinimalAPI)
+class UInteractable : public UInterface
+{
+	GENERATED_BODY()
+};
+
+class STATEOFZ_API IInteractable
+{
+	GENERATED_BODY()
+
+public:
+	//pure virtual functions
+	virtual void OnHover() = 0;
+	virtual void OnInteract() = 0;
+};
