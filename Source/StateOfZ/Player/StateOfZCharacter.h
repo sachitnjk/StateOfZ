@@ -12,7 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
-class ASearchBox;
+class USearchBox;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -77,8 +77,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
 	float VaultSurfaceFinderDownRayLength = 1000.f;
 
-	AActor* currentInteractable;
-	ASearchBox* searchBoxOnCurrent;
+	UPrimitiveComponent* currentInteractable;
+	USearchBox* searchBoxOnCurrent;
 
 protected:
 

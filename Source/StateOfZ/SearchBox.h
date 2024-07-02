@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "SearchBox.generated.h"
 
-UCLASS()
-class STATEOFZ_API ASearchBox : public AActor
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class STATEOFZ_API USearchBox : public UBoxComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASearchBox();
+	USearchBox();
 
 	void OnHover();
 	void OnInteract();

@@ -6,26 +6,25 @@
 #include "Player/StateOfZCharacter.h"
 
 // Sets default values
-ASearchBox::ASearchBox()
+USearchBox::USearchBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 // Called when the game starts or when spawned
-void ASearchBox::BeginPlay()
+void USearchBox::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void ASearchBox::OnHover()
+void USearchBox::OnHover()
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Hovering on this"));
 }
 
-void ASearchBox::OnInteract()
+void USearchBox::OnInteract()
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this"));
 }
