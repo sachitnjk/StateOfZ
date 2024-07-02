@@ -163,9 +163,13 @@ void AStateOfZCharacter::InteractCheck()
 		AActor* hitActor = hitResult.GetActor();
 		if(hitActor && hitActor->IsA(ASearchBox::StaticClass())/**&& hitActor inplements interactable interface*/)
 		{
+			if(currentInteractable == hitActor)
+			{
+				return;
+			}
 			currentInteractable = hitActor;
-
-			ASearchBox* searchBoxOnCurrent = Cast<ASearchBox>(currentInteractable);
+			
+			searchBoxOnCurrent = Cast<ASearchBox>(currentInteractable);
 			if(searchBoxOnCurrent)
 			{
 				searchBoxOnCurrent->OnHover();
@@ -189,7 +193,13 @@ void AStateOfZCharacter::Interact()
 {
 	if(currentInteractable)
 	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
+		searchBoxOnCurrent = Cast<ASearchBox>(currentInteractable);
+		
+		if(searchBoxOnCurrent != nullptr)
+		{
+			searchBoxOnCurrent->OnInteract();
+			// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
+		}
 	}
 }
 

@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class ASearchBox;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -46,7 +47,7 @@ class AStateOfZCharacter : public ACharacter
 	UInputAction* LookAction;
 
 	/** Interact Input Action */
-	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPivateAcess = "true"))
+	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractAction;
 
 public:
@@ -77,6 +78,7 @@ private:
 	float VaultSurfaceFinderDownRayLength = 1000.f;
 
 	AActor* currentInteractable;
+	ASearchBox* searchBoxOnCurrent;
 
 protected:
 
@@ -101,8 +103,6 @@ protected:
 	void PerformVault();
 
 	void ClearToVaultCheck(const FVector& vaultLocation, const FCollisionQueryParams& collisionParams);
-	void StartVault();
-	void StopVault();
 
 protected:
 	// APawn interface
