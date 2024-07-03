@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Interfaces/Interactable.h"
+#include "Components/WidgetComponent.h"
 #include "SearchBox.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,7 +20,7 @@ public:
 	virtual void OnHover() override;
 	virtual void OnInteract() override;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY()
 		UWidgetComponent* widgetComponent;
 
 protected:
