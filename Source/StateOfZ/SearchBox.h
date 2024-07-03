@@ -15,9 +15,12 @@ class STATEOFZ_API USearchBox : public UBoxComponent, public IInteractable
 public:	
 	// Sets default values for this actor's properties
 	USearchBox();
-
+	
 	virtual void OnHover() override;
 	virtual void OnInteract() override;
+
+	UPROPERTY(BlueprintReadWrite)
+		UWidgetComponent* widgetComponent;
 
 protected:
 	// Called when the game starts or when spawned
