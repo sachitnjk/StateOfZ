@@ -101,7 +101,7 @@ void AStateOfZCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStateOfZCharacter::Look);
 
 		//Interacting
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AStateOfZCharacter::Interact);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::Interact);
 	}
 	else
 	{

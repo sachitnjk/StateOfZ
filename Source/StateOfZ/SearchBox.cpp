@@ -16,7 +16,8 @@ USearchBox::USearchBox()
 void USearchBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	isOpen = false;
 }
 
 void USearchBox::OnHover()
@@ -26,5 +27,15 @@ void USearchBox::OnHover()
 
 void USearchBox::OnInteract()
 {
-	UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this"));
+	if(!isOpen)
+	{
+		isOpen = true;
+	}
+	else
+	{
+		isOpen = false;
+	}
+
+	UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
+	UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this, open status: %s"), isOpen ? TEXT("true") : TEXT("false"));
 }
