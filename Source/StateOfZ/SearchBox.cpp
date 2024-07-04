@@ -2,7 +2,7 @@
 
 
 #include "SearchBox.h"
-
+#include "Components/WidgetComponent.h"
 #include "Player/StateOfZCharacter.h"
 
 // Sets default values
@@ -23,6 +23,10 @@ void USearchBox::BeginPlay()
 void USearchBox::OnHover()
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Hovering on this"));
+	if(PressKeyPopUpWidget != nullptr)
+	{
+		PressKeyPopUpWidget->SetVisibility(true);
+	}
 }
 
 void USearchBox::OnInteract()
@@ -38,4 +42,16 @@ void USearchBox::OnInteract()
 
 	UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this, open status: %s"), isOpen ? TEXT("true") : TEXT("false"));
+}
+
+void USearchBox::SetUpUI(UWidgetComponent* PressKeyPopUp)
+{
+	if(PressKeyPopUp == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("The UI set up is called with a null widget on the seach box"));
+		return;	
+	}
+	
+	PressKeyPopUpWidget = PressKeyPopUp;
+	PressKeyPopUpWidget->SetVisibility(false);
 }

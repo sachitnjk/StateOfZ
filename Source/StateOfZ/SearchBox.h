@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Interfaces/Interactable.h"
-#include "Components/WidgetComponent.h"
 #include "SearchBox.generated.h"
+
+class UWidgetComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class STATEOFZ_API USearchBox : public UBoxComponent, public IInteractable
@@ -20,14 +21,16 @@ public:
 	virtual void OnHover() override;
 	virtual void OnInteract() override;
 
-	UPROPERTY()
-		UWidgetComponent* widgetComponent;
-
+	UFUNCTION(BlueprintCallable)
+	void SetUpUI(UWidgetComponent* PressKeyPopUp);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
 private:
 	bool isOpen;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	UWidgetComponent* PressKeyPopUpWidget;
 };
