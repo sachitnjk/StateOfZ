@@ -24,17 +24,14 @@ AInteractionBox::AInteractionBox()
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetupAttachment(SceneComponent);
-
-	// WidgetComponent->SetVisibility(false);
-
-	// SearchBoxComponent->SetUpUI(WidgetComponent);
+	
 }
 
 // Called when the game starts or when spawned
 void AInteractionBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SearchBoxComponent->SetUpUI(WidgetComponent);
 }
 
 // Called every frame

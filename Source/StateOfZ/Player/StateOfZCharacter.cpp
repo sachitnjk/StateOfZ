@@ -178,12 +178,20 @@ void AStateOfZCharacter::InteractCheck()
 		}
 		else
 		{
+			if(currentInteractable)
+			{
+				searchBoxOnCurrent->OnHoverDisable();
+			}
 			currentInteractable = nullptr;
 			return;
 		}
 	}
 	else
 	{
+		if(currentInteractable)
+		{
+			searchBoxOnCurrent->OnHoverDisable();
+		}
 		currentInteractable = nullptr;
 	}
 }
