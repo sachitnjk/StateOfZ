@@ -17,5 +17,6 @@ class STATEOFZ_API IInteractable
 public:
 	//pure virtual functions
 	virtual void OnHover() = 0;
+	virtual void OnHoverDisable() = 0;
 	virtual void OnInteract() = 0;
 };

@@ -29,6 +29,15 @@ void USearchBox::OnHover()
 	}
 }
 
+void USearchBox::OnHoverDisable()
+{
+	if (PressKeyPopUpWidget)
+	{
+		PressKeyPopUpWidget->SetVisibility(false);
+	}
+}
+
+
 void USearchBox::OnInteract()
 {
 	if(!isOpen)

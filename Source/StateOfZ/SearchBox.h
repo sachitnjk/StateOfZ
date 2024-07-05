@@ -19,6 +19,7 @@ public:
 	USearchBox();
 	
 	virtual void OnHover() override;
+	virtual void OnHoverDisable() override;
 	virtual void OnInteract() override;
 
 	UFUNCTION(BlueprintCallable)
