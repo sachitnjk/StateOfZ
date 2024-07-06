@@ -77,8 +77,20 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
 	float VaultSurfaceFinderDownRayLength = 1000.f;
 
+	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = true))
+		float interactionHoldDuration;
+
 	UPrimitiveComponent* currentInteractable;
 	USearchBox* searchBoxOnCurrent;
+
+	bool bIsInteractHeld;
+	float interactionStartTime;
+	
+	void StartInteract();
+	void StopInteract();
+	
+	void LockMovement();
+	void UnlockMovement();
 
 protected:
 

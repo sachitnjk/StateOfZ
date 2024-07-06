@@ -63,12 +63,26 @@ void AStateOfZCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	bIsInteractHeld = false;
+	interactionStartTime = 0.0f;
 }
 
 void AStateOfZCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if(bIsInteractHeld)
+	{
+		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
+		{
+			Interact();
+			bIsInteractHeld = false;
+			//change the movement lock later
+			UnlockMovement();
+		}
+	}
+	
 	InteractCheck();
 	VaultCheck();
 }
@@ -101,7 +115,10 @@ void AStateOfZCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStateOfZCharacter::Look);
 
 		//Interacting
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::Interact);
+		// EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::Interact);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::StartInteract);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &AStateOfZCharacter::StopInteract);
+		
 	}
 	else
 	{
@@ -156,12 +173,11 @@ void AStateOfZCharacter::InteractCheck()
 	FVector interactionRayEnd = interactionRayPoint + (FollowCamera->GetForwardVector() * maxInteractRayDistance);
 	
 	bool bCanInteract = GetWorld()->LineTraceSingleByChannel(hitResult, interactionRayPoint, interactionRayEnd, ECC_Visibility, collisionParams);
-	// DrawDebugLine(GetWorld(), interactionRayPoint, interactionRayEnd, FColor::Yellow, false, 5, 0, 1);
 	
 	if(bCanInteract)
 	{
 		UPrimitiveComponent* hitComponent = hitResult.GetComponent();
-		if(hitComponent && hitComponent->IsA(USearchBox::StaticClass())/**&& hitActor inplements interactable interface*/)
+		if(hitComponent && hitComponent->IsA(USearchBox::StaticClass()))
 		{
 			if(currentInteractable == hitComponent)
 			{
@@ -196,6 +212,21 @@ void AStateOfZCharacter::InteractCheck()
 	}
 }
 
+void AStateOfZCharacter::StartInteract()
+{
+	if(currentInteractable)
+	{
+		bIsInteractHeld = true;
+		interactionStartTime = GetWorld()->GetTimeSeconds();
+		LockMovement();
+	}
+}
+
+void AStateOfZCharacter::StopInteract()
+{
+	bIsInteractHeld = false;
+	UnlockMovement();
+}
 
 void AStateOfZCharacter::Interact()
 {
@@ -314,3 +345,14 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 		UE_LOG(LogTemplateCharacter, Log, TEXT("Location not clear to vault"));
 	}
 }
+
+void AStateOfZCharacter::LockMovement()
+{
+	GetCharacterMovement()->DisableMovement();
+}
+
+void AStateOfZCharacter::UnlockMovement()
+{
+	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+}
+
