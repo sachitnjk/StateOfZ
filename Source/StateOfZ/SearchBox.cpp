@@ -37,6 +37,23 @@ void USearchBox::OnHoverDisable()
 	}
 }
 
+void USearchBox::OnSearchingUI()
+{
+	if(SearchingPopUpWidget)
+	{
+		OnHoverDisable();
+		SearchingPopUpWidget->SetVisibility(true);
+	}
+}
+
+void USearchBox::OnSearchingUIStop()
+{
+	if(SearchingPopUpWidget)
+	{
+		SearchingPopUpWidget->SetVisibility(false);
+		OnHover();
+	}
+}
 
 void USearchBox::OnInteract()
 {
@@ -63,4 +80,16 @@ void USearchBox::SetUpUI(UWidgetComponent* PressKeyPopUp)
 	
 	PressKeyPopUpWidget = PressKeyPopUp;
 	PressKeyPopUpWidget->SetVisibility(false);
+}
+
+void USearchBox::SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget)
+{
+	if(SearchingTextWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("The UI set up is called with a null widget on the seach box"));
+		return;	
+	}
+	
+	SearchingPopUpWidget = SearchingTextWidget;
+	SearchingPopUpWidget->SetVisibility(false);
 }

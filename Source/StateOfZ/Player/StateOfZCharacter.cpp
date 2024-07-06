@@ -216,6 +216,10 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
+		if(searchBoxOnCurrent)
+		{
+			searchBoxOnCurrent->OnSearchingUI();
+		}
 		bIsInteractHeld = true;
 		interactionStartTime = GetWorld()->GetTimeSeconds();
 		LockMovement();
@@ -224,6 +228,10 @@ void AStateOfZCharacter::StartInteract()
 
 void AStateOfZCharacter::StopInteract()
 {
+	if(searchBoxOnCurrent)
+	{
+		searchBoxOnCurrent->OnSearchingUIStop();
+	}	
 	bIsInteractHeld = false;
 	UnlockMovement();
 }

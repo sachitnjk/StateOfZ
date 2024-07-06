@@ -22,8 +22,13 @@ public:
 	virtual void OnHoverDisable() override;
 	virtual void OnInteract() override;
 
+	void OnSearchingUI();
+	void OnSearchingUIStop();
+
 	UFUNCTION(BlueprintCallable)
 	void SetUpUI(UWidgetComponent* PressKeyPopUp);
+
+	void SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -34,4 +39,6 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	UWidgetComponent* PressKeyPopUpWidget;
+	
+	UWidgetComponent* SearchingPopUpWidget;
 };

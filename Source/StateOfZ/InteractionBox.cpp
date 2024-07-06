@@ -18,6 +18,9 @@ AInteractionBox::AInteractionBox()
 	
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	WidgetComponent->SetupAttachment(SceneComponent);
+
+	SearchingTextWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("SearchingTextWidgetComponent"));
+	SearchingTextWidgetComponent->SetupAttachment(SceneComponent);
 	
 	SearchBoxComponent = CreateDefaultSubobject<USearchBox>(TEXT("SearchBoxComponent"));
 	SearchBoxComponent->SetupAttachment(SceneComponent);
@@ -32,6 +35,7 @@ void AInteractionBox::BeginPlay()
 {
 	Super::BeginPlay();
 	SearchBoxComponent->SetUpUI(WidgetComponent);
+	SearchBoxComponent->SetUpSearchingTextUI(SearchingTextWidgetComponent);
 }
 
 // Called every frame
