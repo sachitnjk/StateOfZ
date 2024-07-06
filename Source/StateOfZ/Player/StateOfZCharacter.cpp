@@ -77,6 +77,10 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
 		{
 			Interact();
+			if(searchBoxOnCurrent)
+			{
+				searchBoxOnCurrent->OnSearchingUIStop();
+			}
 			bIsInteractHeld = false;
 			//change the movement lock later
 			UnlockMovement();
