@@ -18,5 +18,7 @@ public:
 	//pure virtual functions
 	virtual void OnHover() = 0;
 	virtual void OnHoverDisable() = 0;
-	virtual void OnInteract() = 0;
+	virtual void OnInteractStart() = 0;
+	virtual void OnInteractOngoing() = 0;
+	virtual  void OnInteractStop() = 0;
 };

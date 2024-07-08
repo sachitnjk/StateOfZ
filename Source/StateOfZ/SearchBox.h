@@ -17,10 +17,13 @@ class STATEOFZ_API USearchBox : public UBoxComponent, public IInteractable
 public:	
 	// Sets default values for this actor's properties
 	USearchBox();
-	
+
+	// functions from IInteractable interface
 	virtual void OnHover() override;
 	virtual void OnHoverDisable() override;
-	virtual void OnInteract() override;
+	virtual void OnInteractStart() override;
+	virtual void OnInteractOngoing() override;
+	virtual void OnInteractStop() override;
 
 	void OnSearchingUI();
 	void OnSearchingUIStop();

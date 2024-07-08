@@ -76,10 +76,9 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 	{
 		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
 		{
-			Interact();
-			if(searchBoxOnCurrent)
+			if(currentInteractable)
 			{
-				searchBoxOnCurrent->OnSearchingUIStop();
+				currentInteractable->OnInteractStop();
 			}
 			bIsInteractHeld = false;
 			//change the movement lock later
@@ -179,25 +178,39 @@ void AStateOfZCharacter::InteractCheck()
 	if(bCanInteract)
 	{
 		UPrimitiveComponent* hitComponent = hitResult.GetComponent();
-		if(hitComponent && hitComponent->IsA(USearchBox::StaticClass()))
+		AActor* hitActor = hitResult.GetActor();
+		IInteractable* potentialInteractable = nullptr;
+		
+		if(hitComponent && hitComponent->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
 		{
-			if(currentInteractable == hitComponent)
+			potentialInteractable = Cast<IInteractable>(hitComponent);
+		}
+		else if(hitActor && hitActor->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+		{
+			potentialInteractable = Cast<IInteractable>(hitActor);
+		}
+		
+		if(potentialInteractable != nullptr)
+		{
+			if(currentInteractable == potentialInteractable)
 			{
 				return;
 			}
-			currentInteractable = hitComponent;
-			
-			searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
-			if(searchBoxOnCurrent)
-			{
-				searchBoxOnCurrent->OnHover();
-			}
+			currentInteractable = potentialInteractable;
+
+			currentInteractable->OnHover();
+			// searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
+			// if(searchBoxOnCurrent)
+			// {
+			// 	searchBoxOnCurrent->OnHover();
+			// }
 		}
 		else
 		{
 			if(currentInteractable)
 			{
-				searchBoxOnCurrent->OnHoverDisable();
+				// searchBoxOnCurrent->OnHoverDisable();
+				currentInteractable->OnHoverDisable();
 			}
 			currentInteractable = nullptr;
 			return;
@@ -207,7 +220,8 @@ void AStateOfZCharacter::InteractCheck()
 	{
 		if(currentInteractable)
 		{
-			searchBoxOnCurrent->OnHoverDisable();
+			// searchBoxOnCurrent->OnHoverDisable();
+			currentInteractable->OnHoverDisable();
 		}
 		currentInteractable = nullptr;
 	}
@@ -217,10 +231,11 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
-		if(searchBoxOnCurrent)
-		{
-			searchBoxOnCurrent->OnSearchingUI();
-		}
+		// if(searchBoxOnCurrent)
+		// {
+		// 	searchBoxOnCurrent->OnSearchingUI();
+		// }
+		currentInteractable->OnInteractStart();
 		bIsInteractHeld = true;
 		interactionStartTime = GetWorld()->GetTimeSeconds();
 		LockMovement();
@@ -229,27 +244,32 @@ void AStateOfZCharacter::StartInteract()
 
 void AStateOfZCharacter::StopInteract()
 {
-	if(searchBoxOnCurrent)
+	// if(searchBoxOnCurrent)
+	// {
+	// 	searchBoxOnCurrent->OnSearchingUIStop();
+	// }
+	if(currentInteractable)
 	{
-		searchBoxOnCurrent->OnSearchingUIStop();
-	}	
+		currentInteractable->OnInteractStop();
+	}
 	bIsInteractHeld = false;
 	UnlockMovement();
 }
-
-void AStateOfZCharacter::Interact()
-{
-	if(currentInteractable)
-	{
-		searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
-		
-		if(searchBoxOnCurrent != nullptr)
-		{
-			searchBoxOnCurrent->OnInteract();
-			// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
-		}
-	}
-}
+//
+// void AStateOfZCharacter::Interact()
+// {
+// 	if(currentInteractable)
+// 	{
+// 		// searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
+// 		//
+// 		// if(searchBoxOnCurrent != nullptr)
+// 		// {
+// 		// 	searchBoxOnCurrent->OnInteractStart();
+// 		// 	// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
+// 		// }
+// 		currentInteractable->OnInteractStart();
+// 	}
+// }
 
 void AStateOfZCharacter::Jump()
 {

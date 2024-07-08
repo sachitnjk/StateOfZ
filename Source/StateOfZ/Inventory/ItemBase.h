@@ -3,10 +3,11 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "Components/WidgetComponent.h"
+#include "StateOfZ/Interfaces/Interactable.h"
 #include "ItemBase.generated.h"
 
 UCLASS()
-class STATEOFZ_API AItemBase : public AActor
+class STATEOFZ_API AItemBase : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
@@ -21,8 +22,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float ItemWeight;
-
+	
 	virtual void Use();
+
+	// functions from IInteractable interface
+	virtual void OnHover() override;
+	virtual void OnHoverDisable() override;
+	virtual void OnInteractStart() override;
+	virtual void OnInteractOngoing() override;
+	virtual void OnInteractStop() override;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

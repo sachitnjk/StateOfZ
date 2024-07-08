@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "inputAction.h"
 #include "Logging/LogMacros.h"
+#include "StateOfZ/Interfaces/Interactable.h"
 #include "StateOfZCharacter.generated.h"
 
 class USpringArmComponent;
@@ -80,8 +81,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = true))
 		float interactionHoldDuration;
 
-	UPrimitiveComponent* currentInteractable;
+	IInteractable* currentInteractable;
 	USearchBox* searchBoxOnCurrent;
+	AActor* itemBaseOnCurrent;
 
 	bool bIsInteractHeld;
 	float interactionStartTime;

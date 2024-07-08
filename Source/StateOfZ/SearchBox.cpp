@@ -55,20 +55,41 @@ void USearchBox::OnSearchingUIStop()
 	}
 }
 
-void USearchBox::OnInteract()
+void USearchBox::OnInteractStart()
 {
-	if(!isOpen)
+	// if(!isOpen)
+	// {
+	// 	isOpen = true;
+	// }
+	// else
+	// {
+	// 	isOpen = false;
+	// }
+	//
+	// UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
+	// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this, open status: %s"), isOpen ? TEXT("true") : TEXT("false"));
+	if(SearchingPopUpWidget)
 	{
-		isOpen = true;
+		OnHoverDisable();
+		SearchingPopUpWidget->SetVisibility(true);
 	}
-	else
-	{
-		isOpen = false;
-	}
-
-	UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
-	UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this, open status: %s"), isOpen ? TEXT("true") : TEXT("false"));
 }
+
+void USearchBox::OnInteractOngoing()
+{
+	
+}
+
+
+void USearchBox::OnInteractStop()
+{
+	if(SearchingPopUpWidget)
+	{
+		SearchingPopUpWidget->SetVisibility(false);
+		OnHover();
+	}
+}
+
 
 void USearchBox::SetUpUI(UWidgetComponent* PressKeyPopUp)
 {

@@ -22,3 +22,30 @@ void AItemBase::Use()
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Use Item called"));
 }
+
+void AItemBase::OnHover()
+{
+	UE_LOG(LogTemplateCharacter, Log, TEXT("Hover Enabled On : %s"), *this->GetName());
+}
+
+void AItemBase::OnHoverDisable()
+{
+	UE_LOG(LogTemplateCharacter, Log, TEXT("Hover Diabled On : %s"), *this->GetName());
+}
+
+void AItemBase::OnInteractStart()
+{
+	UE_LOG(LogTemplateCharacter, Log, TEXT("Interaction called on : %s"), *this->GetName());
+}
+
+void AItemBase::OnInteractOngoing()
+{
+	
+}
+
+void AItemBase::OnInteractStop()
+{
+	
+}
+
+
