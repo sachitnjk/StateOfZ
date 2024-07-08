@@ -1,0 +1,24 @@
+﻿#include "ItemBase.h"
+#include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/WidgetComponent.h"
+#include "StateOfZ/Player/StateOfZCharacter.h"
+
+AItemBase::AItemBase()
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	RootComponent = SceneComponent;
+	
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	StaticMeshComponent->SetupAttachment(SceneComponent);
+
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	WidgetComponent->SetupAttachment(SceneComponent);
+}
+
+void AItemBase::Use()
+{
+	UE_LOG(LogTemplateCharacter, Log, TEXT("Use Item called"));
+}

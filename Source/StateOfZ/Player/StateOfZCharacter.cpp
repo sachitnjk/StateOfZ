@@ -119,7 +119,6 @@ void AStateOfZCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStateOfZCharacter::Look);
 
 		//Interacting
-		// EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::Interact);
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::StartInteract);
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &AStateOfZCharacter::StopInteract);
 		
@@ -172,7 +171,6 @@ void AStateOfZCharacter::InteractCheck()
 	collisionParams.AddIgnoredActor(this);
 
 	FHitResult hitResult;
-	//FVector interactionRayPoint = FollowCamera->GetComponentLocation();
 	FVector interactionRayPoint = GetActorLocation();
 	FVector interactionRayEnd = interactionRayPoint + (FollowCamera->GetForwardVector() * maxInteractRayDistance);
 	
@@ -194,7 +192,6 @@ void AStateOfZCharacter::InteractCheck()
 			{
 				searchBoxOnCurrent->OnHover();
 			}
-			// UE_LOG(LogTemplateCharacter, Log, TEXT("current Interactable Actor Set: %s"), *hitActor->GetName());
 		}
 		else
 		{
