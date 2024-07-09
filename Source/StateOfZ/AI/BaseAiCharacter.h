@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseAiCharacter.generated.h"
 
+class UAIPerceptionComponent;
+
 UCLASS()
 class STATEOFZ_API ABaseAiCharacter : public ACharacter
 {
@@ -19,10 +21,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category="Components")
+	UAIPerceptionComponent* AiPerceptionComponent;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	FORCEINLINE UAIPerceptionComponent* GetAiPerceptionComponent() { return AiPerceptionComponent; }
 };
