@@ -3,12 +3,16 @@
 
 #include "BaseAiCharacter.h"
 
+#include "Perception/AIPerceptionComponent.h"
+
 
 // Sets default values
 ABaseAiCharacter::ABaseAiCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	AiPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AI Perception Component"));
 }
 
 // Called when the game starts or when spawned
@@ -22,10 +26,3 @@ void ABaseAiCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
-// Called to bind functionality to input
-void ABaseAiCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
