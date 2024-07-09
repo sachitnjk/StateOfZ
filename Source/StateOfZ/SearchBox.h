@@ -34,6 +34,7 @@ public:
 
 	void SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget);
 	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

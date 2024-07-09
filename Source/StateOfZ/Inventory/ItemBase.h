@@ -22,15 +22,20 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float ItemWeight;
-	
-	virtual void Use();
 
+	UWidgetComponent* HoverDisplayWidget;
+	
+	void SetUpUI(UWidgetComponent* PopUpUI);
+	virtual void Use();
 	// functions from IInteractable interface
 	virtual void OnHover() override;
 	virtual void OnHoverDisable() override;
 	virtual void OnInteractStart(AStateOfZCharacter* PlayerChar) override;
 	virtual void OnInteractOngoing() override;
 	virtual void OnInteractStop() override;
+
+protected:
+	virtual void BeginPlay() override;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
