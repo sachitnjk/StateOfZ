@@ -55,7 +55,7 @@ void USearchBox::OnSearchingUIStop()
 	}
 }
 
-void USearchBox::OnInteractStart()
+void USearchBox::OnInteractStart(AStateOfZCharacter* PlayerChar)
 {
 	// if(!isOpen)
 	// {

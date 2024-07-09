@@ -33,9 +33,14 @@ void AItemBase::OnHoverDisable()
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Hover Diabled On : %s"), *this->GetName());
 }
 
-void AItemBase::OnInteractStart()
+void AItemBase::OnInteractStart(AStateOfZCharacter* PlayerChar)
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Interaction called on : %s"), *this->GetName());
+	if(PlayerChar != nullptr)
+	{
+		PlayerChar->AddToPlayerInventory(this);
+	}
+	// Destroy(this);
 }
 
 void AItemBase::OnInteractOngoing()

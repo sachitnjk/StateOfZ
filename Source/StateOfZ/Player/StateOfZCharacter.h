@@ -7,6 +7,7 @@
 #include "inputAction.h"
 #include "Logging/LogMacros.h"
 #include "StateOfZ/Interfaces/Interactable.h"
+#include "StateOfZ/Inventory/ItemBase.h"
 #include "StateOfZCharacter.generated.h"
 
 class USpringArmComponent;
@@ -14,6 +15,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class USearchBox;
+class UPlayerInventory;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -51,8 +53,12 @@ class AStateOfZCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractAction;
 
+	
+
 public:
 	AStateOfZCharacter();
+
+	void AddToPlayerInventory(AItemBase* Item);
 	
 	UPROPERTY(EditAnywhere)
 		float vaultInterpSpeed = 5.0f;
@@ -66,6 +72,10 @@ public:
 		float maxInteractRayDistance = 10.0f;
 
 private:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPlayerInventory* PlayerInventoryComponent;
+	
 	bool bIsJumping;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta = (AllowPrivateAccess = true))
 	float VaultCheckForwardRayLength = 100.f;
@@ -79,11 +89,9 @@ private:
 	float VaultSurfaceFinderDownRayLength = 1000.f;
 
 	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = true))
-		float interactionHoldDuration;
+	float interactionHoldDuration;
 
 	IInteractable* currentInteractable;
-	USearchBox* searchBoxOnCurrent;
-	AActor* itemBaseOnCurrent;
 
 	bool bIsInteractHeld;
 	float interactionStartTime;
@@ -107,7 +115,6 @@ protected:
 	void Look(const FInputActionValue& Value);
 	
 	/** Called for looking Interact Input */
-	void Interact();
 	void InteractCheck();
 
 	FVector targetVaultPosition;

@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "StateOfZCharacter.h"
-
+#include "StateOfZ/Inventory/ItemBase.h"
 #include "AITestsCommon.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
@@ -12,7 +12,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "StateOfZ/SearchBox.h"
+#include "StateOfZ/Inventory/PlayerInventory.h"
+#include  "StateOfZ/Interfaces/Interactable.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -42,6 +43,9 @@ AStateOfZCharacter::AStateOfZCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	// Attaching player inventory Component (UActorComponent)
+	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventory>(TEXT("PlayerInventoryComponent"));
+	
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -199,17 +203,11 @@ void AStateOfZCharacter::InteractCheck()
 			currentInteractable = potentialInteractable;
 
 			currentInteractable->OnHover();
-			// searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
-			// if(searchBoxOnCurrent)
-			// {
-			// 	searchBoxOnCurrent->OnHover();
-			// }
 		}
 		else
 		{
 			if(currentInteractable)
 			{
-				// searchBoxOnCurrent->OnHoverDisable();
 				currentInteractable->OnHoverDisable();
 			}
 			currentInteractable = nullptr;
@@ -220,7 +218,6 @@ void AStateOfZCharacter::InteractCheck()
 	{
 		if(currentInteractable)
 		{
-			// searchBoxOnCurrent->OnHoverDisable();
 			currentInteractable->OnHoverDisable();
 		}
 		currentInteractable = nullptr;
@@ -231,11 +228,7 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
-		// if(searchBoxOnCurrent)
-		// {
-		// 	searchBoxOnCurrent->OnSearchingUI();
-		// }
-		currentInteractable->OnInteractStart();
+		currentInteractable->OnInteractStart(this);
 		bIsInteractHeld = true;
 		interactionStartTime = GetWorld()->GetTimeSeconds();
 		LockMovement();
@@ -244,10 +237,6 @@ void AStateOfZCharacter::StartInteract()
 
 void AStateOfZCharacter::StopInteract()
 {
-	// if(searchBoxOnCurrent)
-	// {
-	// 	searchBoxOnCurrent->OnSearchingUIStop();
-	// }
 	if(currentInteractable)
 	{
 		currentInteractable->OnInteractStop();
@@ -255,21 +244,6 @@ void AStateOfZCharacter::StopInteract()
 	bIsInteractHeld = false;
 	UnlockMovement();
 }
-//
-// void AStateOfZCharacter::Interact()
-// {
-// 	if(currentInteractable)
-// 	{
-// 		// searchBoxOnCurrent = Cast<USearchBox>(currentInteractable);
-// 		//
-// 		// if(searchBoxOnCurrent != nullptr)
-// 		// {
-// 		// 	searchBoxOnCurrent->OnInteractStart();
-// 		// 	// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact triggered"));
-// 		// }
-// 		currentInteractable->OnInteractStart();
-// 	}
-// }
 
 void AStateOfZCharacter::Jump()
 {
@@ -374,6 +348,15 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 		UE_LOG(LogTemplateCharacter, Log, TEXT("Location not clear to vault"));
 	}
 }
+
+void AStateOfZCharacter::AddToPlayerInventory(AItemBase* Item)
+{
+	if(Item)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("Item Added to inventory : %s"), *Item->ItemName);
+	}
+}
+
 
 void AStateOfZCharacter::LockMovement()
 {

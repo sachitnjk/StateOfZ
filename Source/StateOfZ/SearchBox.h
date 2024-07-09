@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Interfaces/Interactable.h"
+#include "Player/StateOfZCharacter.h"
 #include "SearchBox.generated.h"
 
 class UWidgetComponent;
@@ -21,7 +22,7 @@ public:
 	// functions from IInteractable interface
 	virtual void OnHover() override;
 	virtual void OnHoverDisable() override;
-	virtual void OnInteractStart() override;
+	virtual void OnInteractStart(AStateOfZCharacter* PlayerChar) override;
 	virtual void OnInteractOngoing() override;
 	virtual void OnInteractStop() override;
 

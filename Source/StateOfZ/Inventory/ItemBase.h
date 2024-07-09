@@ -28,7 +28,7 @@ public:
 	// functions from IInteractable interface
 	virtual void OnHover() override;
 	virtual void OnHoverDisable() override;
-	virtual void OnInteractStart() override;
+	virtual void OnInteractStart(AStateOfZCharacter* PlayerChar) override;
 	virtual void OnInteractOngoing() override;
 	virtual void OnInteractStop() override;
 	
@@ -41,5 +41,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* WidgetComponent;
+
+	
 };
 
