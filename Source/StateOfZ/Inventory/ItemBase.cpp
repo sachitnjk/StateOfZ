@@ -53,8 +53,8 @@ void AItemBase::OnInteractStart(AStateOfZCharacter* PlayerChar)
 	if(PlayerChar != nullptr)
 	{
 		PlayerChar->AddToPlayerInventory(this);
+		Destroy();
 	}
-	// Destroy(this);
 }
 
 void AItemBase::OnInteractOngoing()
@@ -95,7 +95,7 @@ void AItemBase::SetUpItemIcon()
 		if(ItemImage)
 		{
 			UE_LOG(LogTemplateCharacter, Log, TEXT("ItemImage found in casted UserWidget"));
-			ItemImage->SetBrushFromTexture(ItemIcon);
+			ItemImage->SetBrushFromTexture(ItemIcon);	
 		}
 	}
 }

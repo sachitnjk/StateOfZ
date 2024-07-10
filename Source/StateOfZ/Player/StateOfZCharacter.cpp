@@ -351,8 +351,9 @@ void AStateOfZCharacter::ClearToVaultCheck(const FVector& vaultLocation, const F
 
 void AStateOfZCharacter::AddToPlayerInventory(AItemBase* Item)
 {
-	if(Item)
+	if(Item && PlayerInventoryComponent != nullptr)
 	{
+		PlayerInventoryComponent->AddToInventory(Item);
 		UE_LOG(LogTemplateCharacter, Log, TEXT("Item Added to inventory : %s"), *Item->ItemName);
 	}
 }
