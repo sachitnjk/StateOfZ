@@ -8,6 +8,7 @@
 
 UBTTask_SetRandomLocationInSphere::UBTTask_SetRandomLocationInSphere()
 {
+	NodeName = TEXT("Set Random Location In Sphere");
 	BlackboardKey.AddVectorFilter(this, GET_MEMBER_NAME_CHECKED(UBTTask_SetRandomLocationInSphere, BlackboardKey));
 }
 

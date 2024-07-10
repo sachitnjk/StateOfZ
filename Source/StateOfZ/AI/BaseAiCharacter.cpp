@@ -3,6 +3,8 @@
 
 #include "BaseAiCharacter.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 
 
@@ -25,4 +27,9 @@ void ABaseAiCharacter::BeginPlay()
 void ABaseAiCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ABaseAiCharacter::SetMaxWalkSpeed(float MaxWalkSpeed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
 }
