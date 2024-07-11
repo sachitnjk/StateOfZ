@@ -1,4 +1,7 @@
 ﻿#include "ItemBase.h"
+
+#include "IDetailTreeNode.h"
+#include "Components/Image.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/WidgetComponent.h"
@@ -23,6 +26,7 @@ void AItemBase::BeginPlay()
 	Super::BeginPlay();
 
 	SetUpUI(WidgetComponent);
+	SetUpItemIcon();
 }
 
 
@@ -49,8 +53,8 @@ void AItemBase::OnInteractStart(AStateOfZCharacter* PlayerChar)
 	if(PlayerChar != nullptr)
 	{
 		PlayerChar->AddToPlayerInventory(this);
+		Destroy();
 	}
-	// Destroy(this);
 }
 
 void AItemBase::OnInteractOngoing()
@@ -75,4 +79,24 @@ void AItemBase::SetUpUI(UWidgetComponent* PopUpUI)
 	HoverDisplayWidget->SetVisibility(false);
 }
 
+void AItemBase::SetUpItemIcon()
+{
+	if(WidgetComponent == nullptr || ItemIcon == nullptr)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("WidgetComponent or ItemIcon is null"));
+		return;
+	}
+
+	UUserWidget* UserWidget = WidgetComponent->GetUserWidgetObject();
+	if(UserWidget)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("UserWidget found in WidgetComponent"));
+		UImage* ItemImage = Cast<UImage>(UserWidget->GetWidgetFromName("ItemIconImage"));
+		if(ItemImage)
+		{
+			UE_LOG(LogTemplateCharacter, Log, TEXT("ItemImage found in casted UserWidget"));
+			ItemImage->SetBrushFromTexture(ItemIcon);	
+		}
+	}
+}
 

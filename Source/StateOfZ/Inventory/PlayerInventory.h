@@ -14,4 +14,6 @@ public:
 	UPlayerInventory();
 
 	void AddToInventory(AItemBase* Item);
+
+	TArray<AItemBase*> InventoryItemList;
 };

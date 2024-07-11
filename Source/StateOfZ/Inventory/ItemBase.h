@@ -22,10 +22,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float ItemWeight;
-
+	
 	UWidgetComponent* HoverDisplayWidget;
 	
 	void SetUpUI(UWidgetComponent* PopUpUI);
+	void SetUpItemIcon();
 	virtual void Use();
 	// functions from IInteractable interface
 	virtual void OnHover() override;
