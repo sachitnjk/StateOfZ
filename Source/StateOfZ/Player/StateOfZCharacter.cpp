@@ -70,6 +70,7 @@ void AStateOfZCharacter::BeginPlay()
 
 	bIsInteractHeld = false;
 	interactionStartTime = 0.0f;
+	TeamId = FGenericTeamId(IdOfTeam);
 }
 
 void AStateOfZCharacter::Tick(float DeltaTime)

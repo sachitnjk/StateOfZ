@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "inputAction.h"
 #include "Logging/LogMacros.h"
@@ -21,7 +22,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class AStateOfZCharacter : public ACharacter
+class AStateOfZCharacter : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -71,6 +72,11 @@ public:
 	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
 		float maxInteractRayDistance = 10.0f;
 
+	//Team Id interface sutff
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int IdOfTeam = 0;
+	FORCEINLINE virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+
 private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -103,7 +109,8 @@ private:
 	void UnlockMovement();
 
 protected:
-
+	FGenericTeamId TeamId;
+	
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 

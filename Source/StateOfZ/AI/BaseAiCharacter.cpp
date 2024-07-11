@@ -21,6 +21,8 @@ ABaseAiCharacter::ABaseAiCharacter()
 void ABaseAiCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TeamId = FGenericTeamId(IdOfTeam);
 }
 
 // Called every frame

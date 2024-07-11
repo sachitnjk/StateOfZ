@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "BaseAiController.generated.h"
 
+class ABaseAiCharacter;
+class AStateOfZCharacter;
 /**
  * 
  */
@@ -18,13 +20,19 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	void SetPlayerOnBlackboard();
+	void ClearPlayerOnBlackboard();
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI")
 	UBehaviorTree* AiBehavior;
 
 	UBlackboardComponent* AiBlackboard;
+	ABaseAiCharacter* CachedAiAgent;
+	AStateOfZCharacter* CachedPlayer;
+
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 	const FName BBK_Player = FName("Player");
 	const FName BBK_StartingLocation = FName("StartingLocation");
-	
 };
