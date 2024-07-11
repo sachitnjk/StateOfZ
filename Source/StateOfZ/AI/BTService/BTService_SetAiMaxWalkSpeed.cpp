@@ -16,7 +16,6 @@ UBTService_SetAiMaxWalkSpeed::UBTService_SetAiMaxWalkSpeed()
 
 void UBTService_SetAiMaxWalkSpeed::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UE_LOG(LogTemp, Display, TEXT("RELEVENT"));
 	Super::OnBecomeRelevant(OwnerComp, NodeMemory);
 	ABaseAiCharacter* aiCharacter = Cast<ABaseAiCharacter>(OwnerComp.GetAIOwner()->GetPawn());
 	if(aiCharacter)
@@ -31,7 +30,6 @@ void UBTService_SetAiMaxWalkSpeed::OnBecomeRelevant(UBehaviorTreeComponent& Owne
 
 void UBTService_SetAiMaxWalkSpeed::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UE_LOG(LogTemp, Display, TEXT("Not REL"));
 	Super::OnCeaseRelevant(OwnerComp, NodeMemory);
 	if(GoBackToOldSpeedOnNodeExit)
 	{
