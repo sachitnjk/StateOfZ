@@ -20,6 +20,6 @@ public:
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true, UIMin= 1, UIMax = 99))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true, ClampMin = 1, ClampMax = 99,  UIMin= 1, UIMax = 99))
 	int ChanceToSucceeedInPecentage = 30;
 };
