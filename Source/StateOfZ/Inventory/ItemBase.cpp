@@ -25,6 +25,12 @@ void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(maxItemStackCount <= 0)
+	{
+		//Setting default value for maxItemStackCount if not set in editor
+		maxItemStackCount = 1;
+	}
+	
 	SetUpUI(WidgetComponent);
 	SetUpItemIcon();
 }

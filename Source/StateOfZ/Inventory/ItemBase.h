@@ -22,6 +22,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float ItemWeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	int maxItemStackCount;
 	
 	UWidgetComponent* HoverDisplayWidget;
 	

@@ -1,6 +1,9 @@
 ﻿#include "PlayerInventory.h"
+
+#include "Algo/ForEach.h"
 #include "StateOfZ/Player/StateOfZCharacter.h"
 #include "Engine/Engine.h"
+#include "StateOfZ/Structs/InventoryItemData.h"
 
 UPlayerInventory::UPlayerInventory()
 {
@@ -11,18 +14,52 @@ void UPlayerInventory::AddToInventory(AItemBase* Item)
 {
 	if(Item)
 	{
-		//Change to .AddUnique for inbuilt duplicate check
-		InventoryItemList.Add(Item);
+		bool bItemFound = false;
+		
+		for (FInventoryItemData& InvItemData : InventoryItemDataList)
+		{
+			if(InvItemData.InventoryItem && InvItemData.InventoryItem->ItemName == Item->ItemName)
+			{
+				UE_LOG(LogTemplateCharacter, Log, TEXT("Going here"));
+				StackItem(InvItemData, Item);
+				bItemFound = true;
+				break;
+			}
+		}
 
-		// --Logging the list on screen-- 
-		 // for (AItemBase* InventoryItem : InventoryItemList)
-		 // {
-		 // 	if (InventoryItem)
-		 // 	{
-		 // 		FString ItemName = InventoryItem->ItemName;
-		 // 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Inventory Item: %s"), *ItemName));
-		 // 	}
-		 // }
+		if(!bItemFound)
+		{
+			NewItemAdd(Item);
+		}
+
+		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Item Found: %s"), bItemFound ? TEXT("True") : TEXT("False")));
+
+		for (FInventoryItemData& InvItemData : InventoryItemDataList)
+		{
+			if (InvItemData.InventoryItem)
+			{
+				FString ItemName = InvItemData.InventoryItem->ItemName;
+				int ItemCount = InvItemData.ItemCount;
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Inventory Item: %s, Count: %d"), *ItemName, ItemCount));
+			}
+		}
+	}
+}
+
+void UPlayerInventory::NewItemAdd(AItemBase* ItemToAdd)
+{
+	FInventoryItemData NewItem;
+	NewItem.InventoryItem = ItemToAdd;
+	NewItem.ItemCount = 1;
+
+	InventoryItemDataList.Add(NewItem);
+}
+
+void UPlayerInventory::StackItem(FInventoryItemData& ItemToStackData, AItemBase* ItemToStack)
+{
+	if(ItemToStackData.ItemCount < ItemToStack->maxItemStackCount)
+	{
+		ItemToStackData.ItemCount++;
 	}
 }
 
