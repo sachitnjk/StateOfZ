@@ -3,9 +3,11 @@
 
 #include "BaseAiCharacter.h"
 
+#include "BaseAiController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PawnMovementComponent.h"
 #include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISense_Hearing.h"
+#include "Perception/AISense_Sight.h"
 
 
 // Sets default values
@@ -23,6 +25,36 @@ void ABaseAiCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	TeamId = FGenericTeamId(IdOfTeam);
+	AiPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABaseAiCharacter::PerceptionUpdated);
+	CachedController = Cast<ABaseAiController>(GetController());
+}
+
+void ABaseAiCharacter::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	if(Stimulus.WasSuccessfullySensed())
+	{
+		if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
+		{
+			if(CachedController != nullptr)
+			{
+				CachedController->SetPlayerOnBlackboard();
+			}
+		}
+		else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
+		{
+			// Handle updates to the hearing sense
+		}
+	}
+	else
+	{
+		if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
+		{
+			if(CachedController != nullptr)
+			{
+				CachedController->ClearPlayerOnBlackboard();
+			}
+		}
+	}
 }
 
 // Called every frame

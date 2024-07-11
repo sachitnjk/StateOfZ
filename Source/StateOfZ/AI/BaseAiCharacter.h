@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "BaseAiCharacter.generated.h"
 
+class ABaseAiController;
 class UAIPerceptionComponent;
 
 UCLASS()
@@ -22,9 +24,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
+	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category="Components")
 	UAIPerceptionComponent* AiPerceptionComponent;
 
+	ABaseAiController* CachedController;
 	FGenericTeamId TeamId;
 	
 public:

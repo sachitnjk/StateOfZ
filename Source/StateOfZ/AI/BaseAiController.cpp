@@ -29,7 +29,7 @@ void ABaseAiController::Tick(float DeltaSeconds)
 
 void ABaseAiController::SetPlayerOnBlackboard()
 {
-	if(CachedPlayer != nullptr)
+	if(CachedPlayer != nullptr && AiBlackboard != nullptr)
 	{
 		AiBlackboard->SetValueAsObject(BBK_Player, CachedPlayer);
 	}
@@ -37,7 +37,10 @@ void ABaseAiController::SetPlayerOnBlackboard()
 
 void ABaseAiController::ClearPlayerOnBlackboard()
 {
-	AiBlackboard->ClearValue(BBK_Player);
+	if(AiBlackboard != nullptr)
+	{
+		AiBlackboard->ClearValue(BBK_Player);
+	}
 }
 
 ETeamAttitude::Type ABaseAiController::GetTeamAttitudeTowards(const AActor& Other) const
@@ -64,8 +67,6 @@ ETeamAttitude::Type ABaseAiController::GetTeamAttitudeTowards(const AActor& Othe
 	{
 		return ETeamAttitude::Friendly;
 	}
-	else
-	{
-		return ETeamAttitude::Hostile;
-	}
+	
+	return ETeamAttitude::Hostile;
 }
