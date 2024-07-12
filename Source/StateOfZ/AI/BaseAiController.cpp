@@ -4,6 +4,7 @@
 #include "BaseAiController.h"
 
 #include "BaseAiCharacter.h"
+#include "EnemyEnumTypes.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,6 +26,9 @@ void ABaseAiController::BeginPlay()
 	{
 		RunBehaviorTree(AiBehavior);
 		AiBlackboard = GetBlackboardComponent();
+		
+		checkf(AiBlackboard != nullptr, TEXT("The Blackboard Component is null, set the black board on the behavior tree assigned to the ai controller"));
+		
 		AiBlackboard->SetValueAsVector(BBK_StartingLocation, GetPawn()->GetActorLocation());
 		CachedPlayer = Cast<AStateOfZCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	}
@@ -38,7 +42,7 @@ void ABaseAiController::Tick(float DeltaSeconds)
 
 void ABaseAiController::SetPlayerOnBlackboard()
 {
-	if(CachedPlayer != nullptr && AiBlackboard != nullptr)
+	if(CachedPlayer != nullptr)
 	{
 		AiBlackboard->SetValueAsObject(BBK_Player, CachedPlayer);
 	}
@@ -46,10 +50,13 @@ void ABaseAiController::SetPlayerOnBlackboard()
 
 void ABaseAiController::ClearPlayerOnBlackboard()
 {
-	if(AiBlackboard != nullptr)
-	{
-		AiBlackboard->ClearValue(BBK_Player);
-	}
+	
+	AiBlackboard->ClearValue(BBK_Player);
+}
+
+void ABaseAiController::SetCurrentStateOnBlackboard(EEnemyAiState StateToSet)
+{
+	AiBlackboard->SetValueAsEnum(BBK_CurrentState,  static_cast<uint8>(StateToSet));
 }
 
 
@@ -60,6 +67,7 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 		if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
 		{
 			SetPlayerOnBlackboard();
+			SetCurrentStateOnBlackboard(EEnemyAiState::Chase);
 		}
 		else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
 		{
@@ -69,6 +77,7 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	else
 	{
 		ClearPlayerOnBlackboard();
+		SetCurrentStateOnBlackboard(EEnemyAiState::Default);
 	}
 }
 

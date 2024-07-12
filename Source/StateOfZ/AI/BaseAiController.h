@@ -7,6 +7,7 @@
 #include "Perception/AIPerceptionTypes.h"
 #include "BaseAiController.generated.h"
 
+enum class EEnemyAiState : uint8;
 class ABaseAiCharacter;
 class AStateOfZCharacter;
 class UAIPerceptionComponent;
@@ -24,6 +25,7 @@ public:
 
 	void SetPlayerOnBlackboard();
 	void ClearPlayerOnBlackboard();
+	void SetCurrentStateOnBlackboard(EEnemyAiState StateToSet);
 	
 protected:
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
@@ -43,4 +45,5 @@ protected:
 
 	const FName BBK_Player = FName("Player");
 	const FName BBK_StartingLocation = FName("StartingLocation");
+	const FName BBK_CurrentState = FName("CurrentState");
 };
