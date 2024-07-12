@@ -31,8 +31,10 @@ void ABaseAiController::BeginPlay()
 		
 		AiBlackboard->SetValueAsVector(BBK_StartingLocation, GetPawn()->GetActorLocation());
 		CachedPlayer = Cast<AStateOfZCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		
+		AiPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABaseAiController::PerceptionUpdated);
+		AiPerceptionComponent->OnTargetPerceptionForgotten.AddDynamic(this, & ABaseAiController::PerceptionForget);
 	}
-	AiPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABaseAiController::PerceptionUpdated);
 }
 
 void ABaseAiController::Tick(float DeltaSeconds)
@@ -76,8 +78,18 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	}
 	else
 	{
+		//Out of any of the perception ranges.
+	}
+}
+
+void ABaseAiController::PerceptionForget(AActor* Actor)
+{
+	if(Actor == CachedPlayer)
+	{
+		UE_LOG(LogTemp, Display, TEXT("PLAYER FORGOTTEN"));
 		ClearPlayerOnBlackboard();
-		SetCurrentStateOnBlackboard(EEnemyAiState::Default);
+		AiBlackboard->SetValueAsVector(BBK_LastSeenLocation, CachedPlayer->GetActorLocation());
+		SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateLastSeen);
 	}
 }
 

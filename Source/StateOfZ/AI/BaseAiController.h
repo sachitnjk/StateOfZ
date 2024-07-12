@@ -30,6 +30,8 @@ public:
 protected:
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
 	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
+	void PerceptionForget(AActor* Actor);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category="Components")
 	UAIPerceptionComponent* AiPerceptionComponent;
@@ -46,4 +48,5 @@ protected:
 	const FName BBK_Player = FName("Player");
 	const FName BBK_StartingLocation = FName("StartingLocation");
 	const FName BBK_CurrentState = FName("CurrentState");
+	const FName BBK_LastSeenLocation = FName("PlayerLastSeenPosition");
 };
