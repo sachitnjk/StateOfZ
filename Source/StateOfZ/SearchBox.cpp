@@ -57,17 +57,6 @@ void USearchBox::OnSearchingUIStop()
 
 void USearchBox::OnInteractStart(AStateOfZCharacter* PlayerChar)
 {
-	// if(!isOpen)
-	// {
-	// 	isOpen = true;
-	// }
-	// else
-	// {
-	// 	isOpen = false;
-	// }
-	//
-	// UE_LOG(LogTemplateCharacter, Log, TEXT("going here"));
-	// UE_LOG(LogTemplateCharacter, Log, TEXT("Interact called on this, open status: %s"), isOpen ? TEXT("true") : TEXT("false"));
 	if(SearchingPopUpWidget)
 	{
 		OnHoverDisable();
@@ -88,6 +77,16 @@ void USearchBox::OnInteractStop()
 		SearchingPopUpWidget->SetVisibility(false);
 		OnHover();
 	}
+}
+
+bool USearchBox::GetOpenedStatus()
+{
+	return isOpen;
+}
+
+void USearchBox::SetOpenedStatus(bool isBoxOpen)
+{
+	isOpen = isBoxOpen;
 }
 
 

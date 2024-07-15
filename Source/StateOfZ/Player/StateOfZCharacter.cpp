@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "StateOfZ/SearchBox.h"
 #include "StateOfZ/Inventory/PlayerInventory.h"
 #include  "StateOfZ/Interfaces/Interactable.h"
 
@@ -45,7 +46,7 @@ AStateOfZCharacter::AStateOfZCharacter()
 
 	// Attaching player inventory Component (UActorComponent)
 	PlayerInventoryComponent = CreateDefaultSubobject<UPlayerInventory>(TEXT("PlayerInventoryComponent"));
-	
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -60,6 +61,10 @@ AStateOfZCharacter::AStateOfZCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
+	//Clear values in constructor
+	PlayerHUD = nullptr;
+	PlayerHUDClass = nullptr;
+	
 	bIsJumping = false;
 }
 
@@ -68,10 +73,38 @@ void AStateOfZCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	if(PlayerHUDClass)
+	{
+		APlayerController* LocalPlayerController = GetLocalViewingPlayerController();
+		PlayerHUD = CreateWidget<UPlayerHUD>(LocalPlayerController, PlayerHUDClass);
+		PlayerHUD->AddToPlayerScreen();
+	}
+
+	if(PlayerHUD)
+	{
+		PlayerHUD->SetSearchHoverUI(false);
+		PlayerHUD->SetOnSearchingUI(false);
+
+		//Binding hover event to PlayerHUD
+		OnHoverChanged.AddDynamic(PlayerHUD, &UPlayerHUD::HandleOnHoverChanged);
+	}
+	
 	bIsInteractHeld = false;
 	interactionStartTime = 0.0f;
 	TeamId = FGenericTeamId(IdOfTeam);
 }
+
+void AStateOfZCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if(PlayerHUD)
+	{
+		PlayerHUD->RemoveFromParent();
+		PlayerHUD = nullptr;
+	}
+
+	Super::EndPlay(EndPlayReason);
+}
+
 
 void AStateOfZCharacter::Tick(float DeltaTime)
 {
@@ -84,6 +117,10 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 			if(currentInteractable)
 			{
 				currentInteractable->OnInteractStop();
+				if(!currentInteractable->GetOpenedStatus())
+				{
+					currentInteractable->SetOpenedStatus(true);
+				}
 			}
 			bIsInteractHeld = false;
 			//change the movement lock later
@@ -204,12 +241,17 @@ void AStateOfZCharacter::InteractCheck()
 			currentInteractable = potentialInteractable;
 
 			currentInteractable->OnHover();
+			if(hitComponent->GetClass()->IsChildOf(USearchBox::StaticClass()) && !currentInteractable->GetOpenedStatus())
+			{
+				OnHoverChanged.Broadcast(true);
+			}
 		}
 		else
 		{
 			if(currentInteractable)
 			{
 				currentInteractable->OnHoverDisable();
+				OnHoverChanged.Broadcast(false);
 			}
 			currentInteractable = nullptr;
 			return;
@@ -220,6 +262,7 @@ void AStateOfZCharacter::InteractCheck()
 		if(currentInteractable)
 		{
 			currentInteractable->OnHoverDisable();
+			OnHoverChanged.Broadcast(false);
 		}
 		currentInteractable = nullptr;
 	}
@@ -229,6 +272,11 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
+		if(PlayerHUD->HoverSearchText->IsVisible())
+		{
+			PlayerHUD->SetSearchHoverUI(false);
+		}
+		
 		currentInteractable->OnInteractStart(this);
 		bIsInteractHeld = true;
 		interactionStartTime = GetWorld()->GetTimeSeconds();
@@ -241,6 +289,10 @@ void AStateOfZCharacter::StopInteract()
 	if(currentInteractable)
 	{
 		currentInteractable->OnInteractStop();
+		if(!currentInteractable->GetOpenedStatus())
+		{
+			OnHoverChanged.Broadcast(true);
+		}
 	}
 	bIsInteractHeld = false;
 	UnlockMovement();
@@ -369,4 +421,3 @@ void AStateOfZCharacter::UnlockMovement()
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
-

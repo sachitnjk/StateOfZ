@@ -38,6 +38,10 @@ public:
 	virtual void OnInteractOngoing() override;
 	virtual void OnInteractStop() override;
 
+	//Unused
+	virtual void SetOpenedStatus(bool isBoxOpen) override;
+	virtual bool GetOpenedStatus() override;
+
 protected:
 	virtual void BeginPlay() override;
 	

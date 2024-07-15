@@ -7,8 +7,10 @@
 #include "GameFramework/Character.h"
 #include "inputAction.h"
 #include "Logging/LogMacros.h"
+#include "Blueprint/UserWidget.h"
 #include "StateOfZ/Interfaces/Interactable.h"
 #include "StateOfZ/Inventory/ItemBase.h"
+#include "StateOfZ/Inventory/PlayerHUD.h"
 #include "StateOfZCharacter.generated.h"
 
 class USpringArmComponent;
@@ -20,6 +22,8 @@ class UPlayerInventory;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHoverChanged, bool, bIsHovering);
 
 UCLASS(config=Game)
 class AStateOfZCharacter : public ACharacter, public IGenericTeamAgentInterface
@@ -54,12 +58,17 @@ class AStateOfZCharacter : public ACharacter, public IGenericTeamAgentInterface
 	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractAction;
 
-	
-
 public:
 	AStateOfZCharacter();
 
 	void AddToPlayerInventory(AItemBase* Item);
+
+	//Event
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnHoverChanged OnHoverChanged;
+	
+	UPROPERTY()
+	class UPlayerHUD* PlayerHUD;
 	
 	UPROPERTY(EditAnywhere)
 		float vaultInterpSpeed = 5.0f;
@@ -78,6 +87,10 @@ public:
 	FORCEINLINE virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
 
 private:
+
+	
+	UPROPERTY(EditAnywhere, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UPlayerHUD> PlayerHUDClass;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UPlayerInventory* PlayerInventoryComponent;
@@ -138,6 +151,7 @@ protected:
 	
 	// To add mapping context
 	virtual void BeginPlay();
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void Tick(float DeltaTime);
 

@@ -63,15 +63,29 @@ void AItemBase::OnInteractStart(AStateOfZCharacter* PlayerChar)
 	}
 }
 
+//-----Unused interface functions-----//
+
+bool AItemBase::GetOpenedStatus()
+{
+	return false;	
+}
+
+void AItemBase::SetOpenedStatus(bool isBoxOpen)
+{
+	return;
+}
+
 void AItemBase::OnInteractOngoing()
 {
-	
+	return;
 }
 
 void AItemBase::OnInteractStop()
 {
-	
+	return;
 }
+
+//----------//
 
 void AItemBase::SetUpUI(UWidgetComponent* PopUpUI)
 {

@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Interfaces/Interactable.h"
 #include "Player/StateOfZCharacter.h"
+#include "Structs/InventoryItemData.h"
 #include "SearchBox.generated.h"
 
 class UWidgetComponent;
@@ -25,6 +26,8 @@ public:
 	virtual void OnInteractStart(AStateOfZCharacter* PlayerChar) override;
 	virtual void OnInteractOngoing() override;
 	virtual void OnInteractStop() override;
+	virtual void SetOpenedStatus(bool isBoxOpen) override;
+	virtual bool GetOpenedStatus() override;
 
 	void OnSearchingUI();
 	void OnSearchingUIStop();
@@ -33,7 +36,6 @@ public:
 	void SetUpUI(UWidgetComponent* PressKeyPopUp);
 
 	void SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget);
-	
 	
 protected:
 	// Called when the game starts or when spawned

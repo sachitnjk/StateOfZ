@@ -23,4 +23,6 @@ public:
 	virtual void OnInteractStart(AStateOfZCharacter* PlayerChar) = 0;
 	virtual void OnInteractOngoing() = 0;
 	virtual  void OnInteractStop() = 0;
+	virtual void SetOpenedStatus(bool isBoxOpen) = 0;
+	virtual bool GetOpenedStatus() = 0;
 };
