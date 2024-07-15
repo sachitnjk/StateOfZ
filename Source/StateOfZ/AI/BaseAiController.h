@@ -42,11 +42,12 @@ protected:
 	UBlackboardComponent* AiBlackboard;
 	ABaseAiCharacter* CachedAiAgent;
 	AStateOfZCharacter* CachedPlayer;
+	EEnemyAiState CurrentStateCatch;
 
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 	const FName BBK_Player = FName("Player");
 	const FName BBK_StartingLocation = FName("StartingLocation");
 	const FName BBK_CurrentState = FName("CurrentState");
-	const FName BBK_LastSeenLocation = FName("PlayerLastSeenPosition");
+	const FName BBK_InvestigationPosition = FName("InvestigationPosition");
 };

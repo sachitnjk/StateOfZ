@@ -58,6 +58,7 @@ void ABaseAiController::ClearPlayerOnBlackboard()
 
 void ABaseAiController::SetCurrentStateOnBlackboard(EEnemyAiState StateToSet)
 {
+	CurrentStateCatch = StateToSet;
 	AiBlackboard->SetValueAsEnum(BBK_CurrentState,  static_cast<uint8>(StateToSet));
 }
 
@@ -73,7 +74,11 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 		}
 		else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
 		{
-			// Handle updates to the hearing sense
+			// if(CurrentStateCatch != EEnemyAiState::InvestigateSound)
+			// {
+				AiBlackboard->SetValueAsVector(BBK_InvestigationPosition, Stimulus.StimulusLocation);
+				SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateSound);
+			// }
 		}
 	}
 	else
@@ -84,11 +89,11 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 
 void ABaseAiController::PerceptionForget(AActor* Actor)
 {
-	if(Actor == CachedPlayer)
+	if(Actor == CachedPlayer && CurrentStateCatch != EEnemyAiState::InvestigateSound)
 	{
 		UE_LOG(LogTemp, Display, TEXT("PLAYER FORGOTTEN"));
 		ClearPlayerOnBlackboard();
-		AiBlackboard->SetValueAsVector(BBK_LastSeenLocation, CachedPlayer->GetActorLocation());
+		AiBlackboard->SetValueAsVector(BBK_InvestigationPosition, CachedPlayer->GetActorLocation());
 		SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateLastSeen);
 	}
 }
