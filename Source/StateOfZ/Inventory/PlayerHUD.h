@@ -17,6 +17,8 @@ public:
 
 	UFUNCTION()
 	void HandleOnHoverChanged(bool IsHoverActive);
+	UFUNCTION()
+	void HandleOnSearchingChanged(bool IsSearchingActive);
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* HoverSearchText;

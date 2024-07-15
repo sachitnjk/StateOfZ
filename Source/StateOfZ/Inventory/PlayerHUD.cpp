@@ -7,6 +7,11 @@ void UPlayerHUD::HandleOnHoverChanged(bool IsHoverActive)
 	SetSearchHoverUI(IsHoverActive);
 }
 
+void UPlayerHUD::HandleOnSearchingChanged(bool IsSearchingActive)
+{
+	SetOnSearchingUI(IsSearchingActive);
+}
+
 
 void UPlayerHUD::SetSearchHoverUI(bool IsHoverActive)
 {

@@ -57,10 +57,13 @@ void USearchBox::OnSearchingUIStop()
 
 void USearchBox::OnInteractStart(AStateOfZCharacter* PlayerChar)
 {
-	if(SearchingPopUpWidget)
+	if(!isOpen)
 	{
-		OnHoverDisable();
-		SearchingPopUpWidget->SetVisibility(true);
+		if(SearchingPopUpWidget)
+		{
+			OnHoverDisable();
+			SearchingPopUpWidget->SetVisibility(true);
+		}
 	}
 }
 

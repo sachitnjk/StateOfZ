@@ -87,6 +87,7 @@ void AStateOfZCharacter::BeginPlay()
 
 		//Binding hover event to PlayerHUD
 		OnHoverChanged.AddDynamic(PlayerHUD, &UPlayerHUD::HandleOnHoverChanged);
+		OnSearchingChanged.AddDynamic(PlayerHUD, &UPlayerHUD::HandleOnSearchingChanged);
 	}
 	
 	bIsInteractHeld = false;
@@ -110,18 +111,13 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(bIsInteractHeld)
+	if(currentInteractable && bIsInteractHeld && !currentInteractable->GetOpenedStatus())
 	{
 		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
 		{
-			if(currentInteractable)
-			{
-				currentInteractable->OnInteractStop();
-				if(!currentInteractable->GetOpenedStatus())
-				{
-					currentInteractable->SetOpenedStatus(true);
-				}
-			}
+			currentInteractable->OnInteractStop();
+			currentInteractable->SetOpenedStatus(true);
+			OnSearchingChanged.Broadcast(false);
 			bIsInteractHeld = false;
 			//change the movement lock later
 			UnlockMovement();
@@ -274,8 +270,13 @@ void AStateOfZCharacter::StartInteract()
 	{
 		if(PlayerHUD->HoverSearchText->IsVisible())
 		{
-			PlayerHUD->SetSearchHoverUI(false);
+			OnHoverChanged.Broadcast(false);
 		}
+		if(!currentInteractable->GetOpenedStatus())
+		{
+			OnSearchingChanged.Broadcast(true);
+		}
+
 		
 		currentInteractable->OnInteractStart(this);
 		bIsInteractHeld = true;
@@ -289,10 +290,13 @@ void AStateOfZCharacter::StopInteract()
 	if(currentInteractable)
 	{
 		currentInteractable->OnInteractStop();
+		
+		OnSearchingChanged.Broadcast(false);
 		if(!currentInteractable->GetOpenedStatus())
 		{
 			OnHoverChanged.Broadcast(true);
 		}
+		
 	}
 	bIsInteractHeld = false;
 	UnlockMovement();

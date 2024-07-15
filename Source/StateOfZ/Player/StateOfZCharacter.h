@@ -24,6 +24,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHoverChanged, bool, bIsHovering);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSearchingChanged, bool, bIsSearching);
 
 UCLASS(config=Game)
 class AStateOfZCharacter : public ACharacter, public IGenericTeamAgentInterface
@@ -66,6 +67,8 @@ public:
 	//Event
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnHoverChanged OnHoverChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnSearchingChanged OnSearchingChanged;
 	
 	UPROPERTY()
 	class UPlayerHUD* PlayerHUD;
