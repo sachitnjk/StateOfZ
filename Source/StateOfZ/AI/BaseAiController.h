@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -28,11 +26,6 @@ public:
 	void SetCurrentStateOnBlackboard(EEnemyAiState StateToSet);
 	
 protected:
-	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
-	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
-	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
-	void PerceptionForget(AActor* Actor);
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category="Components")
 	UAIPerceptionComponent* AiPerceptionComponent;
 	
@@ -44,11 +37,13 @@ protected:
 	AStateOfZCharacter* CachedPlayer;
 	EEnemyAiState CurrentStateCatch;
 
+	FName BBK_Player = FName("Player");
+	FName BBK_CurrentState = FName("CurrentState");
+	
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
-
-	const FName BBK_Player = FName("Player");
-	const FName BBK_StartingLocation = FName("StartingLocation");
-	const FName BBK_CurrentState = FName("CurrentState");
-	const FName BBK_InvestigationPosition = FName("InvestigationPosition");
-	const FName BBK_NewSoundRegistered = FName("NewSoundRegistered");
+	
+	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
+	virtual void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
+	virtual void PerceptionForget(AActor* Actor);
 };
