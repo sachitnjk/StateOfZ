@@ -74,11 +74,9 @@ void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 		}
 		else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
 		{
-			// if(CurrentStateCatch != EEnemyAiState::InvestigateSound)
-			// {
-				AiBlackboard->SetValueAsVector(BBK_InvestigationPosition, Stimulus.StimulusLocation);
-				SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateSound);
-			// }
+			AiBlackboard->SetValueAsBool(BBK_NewSoundRegistered, true);
+			AiBlackboard->SetValueAsVector(BBK_InvestigationPosition, Stimulus.StimulusLocation);
+			SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateSound);
 		}
 	}
 	else

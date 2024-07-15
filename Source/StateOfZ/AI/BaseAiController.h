@@ -50,4 +50,5 @@ protected:
 	const FName BBK_StartingLocation = FName("StartingLocation");
 	const FName BBK_CurrentState = FName("CurrentState");
 	const FName BBK_InvestigationPosition = FName("InvestigationPosition");
+	const FName BBK_NewSoundRegistered = FName("NewSoundRegistered");
 };
