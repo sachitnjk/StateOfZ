@@ -10,8 +10,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "StateOfZ/Player/StateOfZCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "Perception/AISense_Hearing.h"
-#include "Perception/AISense_Sight.h"
 
 ABaseAiController::ABaseAiController()
 {
@@ -29,11 +27,10 @@ void ABaseAiController::BeginPlay()
 		
 		checkf(AiBlackboard != nullptr, TEXT("The Blackboard Component is null, set the black board on the behavior tree assigned to the ai controller"));
 		
-		AiBlackboard->SetValueAsVector(BBK_StartingLocation, GetPawn()->GetActorLocation());
 		CachedPlayer = Cast<AStateOfZCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		
 		AiPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABaseAiController::PerceptionUpdated);
 		AiPerceptionComponent->OnTargetPerceptionForgotten.AddDynamic(this, & ABaseAiController::PerceptionForget);
+		CurrentStateCatch = EEnemyAiState::Default;
 	}
 }
 
@@ -52,7 +49,6 @@ void ABaseAiController::SetPlayerOnBlackboard()
 
 void ABaseAiController::ClearPlayerOnBlackboard()
 {
-	
 	AiBlackboard->ClearValue(BBK_Player);
 }
 
@@ -60,38 +56,6 @@ void ABaseAiController::SetCurrentStateOnBlackboard(EEnemyAiState StateToSet)
 {
 	CurrentStateCatch = StateToSet;
 	AiBlackboard->SetValueAsEnum(BBK_CurrentState,  static_cast<uint8>(StateToSet));
-}
-
-
-void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
-{
-	if(Stimulus.WasSuccessfullySensed())
-	{
-		if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>())
-		{
-			SetPlayerOnBlackboard();
-			SetCurrentStateOnBlackboard(EEnemyAiState::Chase);
-		}
-		else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>())
-		{
-			// Handle updates to the hearing sense
-		}
-	}
-	else
-	{
-		//Out of any of the perception ranges.
-	}
-}
-
-void ABaseAiController::PerceptionForget(AActor* Actor)
-{
-	if(Actor == CachedPlayer)
-	{
-		UE_LOG(LogTemp, Display, TEXT("PLAYER FORGOTTEN"));
-		ClearPlayerOnBlackboard();
-		AiBlackboard->SetValueAsVector(BBK_LastSeenLocation, CachedPlayer->GetActorLocation());
-		SetCurrentStateOnBlackboard(EEnemyAiState::InvestigateLastSeen);
-	}
 }
 
 ETeamAttitude::Type ABaseAiController::GetTeamAttitudeTowards(const AActor& Other) const
@@ -120,4 +84,12 @@ ETeamAttitude::Type ABaseAiController::GetTeamAttitudeTowards(const AActor& Othe
 	}
 	
 	return ETeamAttitude::Hostile;
+}
+
+void ABaseAiController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+}
+
+void ABaseAiController::PerceptionForget(AActor* Actor)
+{
 }
