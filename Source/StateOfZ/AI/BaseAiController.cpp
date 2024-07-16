@@ -58,6 +58,7 @@ void ABaseAiController::ClearPlayerOnBlackboard()
 
 void ABaseAiController::SetCurrentStateOnBlackboard(EEnemyAiState StateToSet)
 {
+	CurrentStateCatch = StateToSet;
 	AiBlackboard->SetValueAsEnum(BBK_CurrentState,  static_cast<uint8>(StateToSet));
 }
 

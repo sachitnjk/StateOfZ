@@ -29,9 +29,9 @@ public:
 	
 protected:
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
-	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	virtual void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = true))
-	void PerceptionForget(AActor* Actor);
+	virtual void PerceptionForget(AActor* Actor);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category="Components")
 	UAIPerceptionComponent* AiPerceptionComponent;
@@ -42,6 +42,7 @@ protected:
 	UBlackboardComponent* AiBlackboard;
 	ABaseAiCharacter* CachedAiAgent;
 	AStateOfZCharacter* CachedPlayer;
+	EEnemyAiState CurrentStateCatch;
 
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
