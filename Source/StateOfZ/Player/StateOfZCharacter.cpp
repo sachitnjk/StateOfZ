@@ -234,12 +234,20 @@ void AStateOfZCharacter::InteractCheck()
 			{
 				return;
 			}
+			if(currentInteractable != nullptr)
+			{
+				currentInteractable->OnHoverDisable();
+			}
 			currentInteractable = potentialInteractable;
 
 			currentInteractable->OnHover();
 			if(hitComponent->GetClass()->IsChildOf(USearchBox::StaticClass()) && !currentInteractable->GetOpenedStatus())
 			{
 				OnHoverChanged.Broadcast(true);
+			}
+			else
+			{
+				OnHoverChanged.Broadcast(false);
 			}
 		}
 		else
@@ -268,7 +276,7 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
-		if(PlayerHUD->HoverSearchText->IsVisible())
+	if(PlayerHUD->HoverSearchText->IsVisible())
 		{
 			OnHoverChanged.Broadcast(false);
 		}
@@ -425,3 +433,15 @@ void AStateOfZCharacter::UnlockMovement()
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
+
+float AStateOfZCharacter::GetInteractProgress()
+{
+	if (bIsInteractHeld)
+	{
+		float CurrentTime = GetWorld()->GetTimeSeconds();
+		float ElapsedTime = CurrentTime - interactionStartTime;
+		return FMath::Clamp(ElapsedTime / interactionHoldDuration, 0.0f, 1.0f);
+	}
+	return 0.0f;
+}
+

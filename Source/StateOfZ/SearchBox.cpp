@@ -9,7 +9,7 @@
 USearchBox::USearchBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
@@ -18,7 +18,19 @@ void USearchBox::BeginPlay()
 	Super::BeginPlay();
 
 	isOpen = false;
+	PlayerScript = nullptr;
 }
+
+void USearchBox::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(PlayerScript != nullptr && InteractionProgressBar != nullptr)
+	{
+		float InteractProgress = PlayerScript->GetInteractProgress();
+		InteractionProgressBar->SetPercent(InteractProgress);
+	}
+}
+
 
 void USearchBox::OnHover()
 {
@@ -57,6 +69,7 @@ void USearchBox::OnSearchingUIStop()
 
 void USearchBox::OnInteractStart(AStateOfZCharacter* PlayerChar)
 {
+	PlayerScript = PlayerChar;
 	if(!isOpen)
 	{
 		if(SearchingPopUpWidget)
@@ -80,6 +93,7 @@ void USearchBox::OnInteractStop()
 		SearchingPopUpWidget->SetVisibility(false);
 		OnHover();
 	}
+	PlayerScript = nullptr;
 }
 
 bool USearchBox::GetOpenedStatus()
@@ -115,4 +129,17 @@ void USearchBox::SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget)
 	
 	SearchingPopUpWidget = SearchingTextWidget;
 	SearchingPopUpWidget->SetVisibility(false);
+
+	if(SearchingPopUpWidget)
+	{
+		UUserWidget* SearchingUserWidget = Cast<UUserWidget>(SearchingPopUpWidget->GetUserWidgetObject());
+		if(SearchingUserWidget)
+		{
+			InteractionProgressBar = Cast<UProgressBar>(SearchingUserWidget->GetWidgetFromName(TEXT("InteractionProgressBar")));
+			if(!InteractionProgressBar)
+			{
+				UE_LOG(LogTemplateCharacter, Log, TEXT("progress Bar Found"));
+			}
+		}
+	}
 }

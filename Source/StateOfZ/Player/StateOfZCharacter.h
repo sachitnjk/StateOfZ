@@ -115,7 +115,6 @@ private:
 
 	IInteractable* currentInteractable;
 
-	bool bIsInteractHeld;
 	float interactionStartTime;
 	
 	void StartInteract();
@@ -159,9 +158,14 @@ protected:
 	virtual void Tick(float DeltaTime);
 
 public:
+	bool bIsInteractHeld;
+	
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION()
+	float GetInteractProgress();
 };
 

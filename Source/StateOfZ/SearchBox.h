@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
+#include "Components/ProgressBar.h"
 #include "Interfaces/Interactable.h"
 #include "Player/StateOfZCharacter.h"
 #include "Structs/InventoryItemData.h"
@@ -31,7 +32,7 @@ public:
 
 	void OnSearchingUI();
 	void OnSearchingUIStop();
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SetUpUI(UWidgetComponent* PressKeyPopUp);
 
@@ -40,6 +41,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 	bool isOpen;
@@ -48,4 +50,8 @@ private:
 	UWidgetComponent* PressKeyPopUpWidget;
 	
 	UWidgetComponent* SearchingPopUpWidget;
+
+	UProgressBar* InteractionProgressBar;
+	
+	AStateOfZCharacter* PlayerScript;
 };
