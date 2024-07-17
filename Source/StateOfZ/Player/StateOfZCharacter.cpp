@@ -91,7 +91,7 @@ void AStateOfZCharacter::BeginPlay()
 	}
 	
 	bIsInteractHeld = false;
-	interactionStartTime = 0.0f;
+	bIsSpeedUpHeld = false;
 	TeamId = FGenericTeamId(IdOfTeam);
 }
 
@@ -113,7 +113,10 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 
 	if(currentInteractable && bIsInteractHeld && !currentInteractable->GetOpenedStatus())
 	{
-		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
+		UpdateInteractProgress(DeltaTime);
+		
+		float InteractProgress = GetInteractProgress();
+		if(InteractProgress >= 1.0f)
 		{
 			currentInteractable->SetOpenedStatus(true);
 			currentInteractable->OnInteractStop();
@@ -286,19 +289,19 @@ void AStateOfZCharacter::StartInteract()
 	if(currentInteractable)
 	{
 		if(PlayerHUD->HoverSearchText->IsVisible())
-			{
-				OnHoverChanged.Broadcast(false);
-			}
-			if(bIsCachedInteractableSearchBox && !currentInteractable->GetOpenedStatus())
-			{
-				OnSearchingChanged.Broadcast(true);
-			}
-
+		{
+			OnHoverChanged.Broadcast(false);
+		}
+		if(bIsCachedInteractableSearchBox && !currentInteractable->GetOpenedStatus())
+		{
+			OnSearchingChanged.Broadcast(true);
+		}
 			
-			currentInteractable->OnInteractStart(this);
-			bIsInteractHeld = true;
-			interactionStartTime = GetWorld()->GetTimeSeconds();
-			LockMovement();
+		currentInteractable->OnInteractStart(this);
+		bIsInteractHeld = true;
+		LockMovement();
+
+		CumulativeInteractionProgress = 0.0f;
 	}
 }
 
@@ -323,16 +326,13 @@ void AStateOfZCharacter::StartSpeedUp()
 {
 	if(bIsInteractHeld)
 	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("Speed Up held"));
+		bIsSpeedUpHeld = true;
 	}
 }
 
 void AStateOfZCharacter::StopSpeedUp()
 {
-	if(bIsInteractHeld)
-	{
-		UE_LOG(LogTemplateCharacter, Log, TEXT("Speed Up stopped"));
-	}
+	bIsSpeedUpHeld = false;
 }
 
 void AStateOfZCharacter::Jump()
@@ -459,14 +459,21 @@ void AStateOfZCharacter::UnlockMovement()
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
 
+void AStateOfZCharacter::UpdateInteractProgress(float DeltaTime)
+{
+	if(bIsSpeedUpHeld)
+	{
+		CumulativeInteractionProgress += (DeltaTime * InteractionSpeedUpMultiplier) / interactionHoldDuration;
+	}
+	else
+	{
+		CumulativeInteractionProgress += DeltaTime / interactionHoldDuration;
+	}
+}
+
+
 float AStateOfZCharacter::GetInteractProgress()
 {
-	if (bIsInteractHeld)
-	{
-		float CurrentTime = GetWorld()->GetTimeSeconds();
-		float ElapsedTime = CurrentTime - interactionStartTime;
-		return FMath::Clamp(ElapsedTime / interactionHoldDuration, 0.0f, 1.0f);
-	}
-	return 0.0f;
+	return FMath::Clamp(CumulativeInteractionProgress, 0.0f, 1.0f);
 }
 

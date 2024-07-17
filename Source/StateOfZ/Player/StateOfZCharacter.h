@@ -85,6 +85,9 @@ public:
 	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
 		float maxInteractRayDistance = 10.0f;
 
+	UPROPERTY(EditAnywhere, meta = (MakeEditWidget=true))
+		float InteractionSpeedUpMultiplier = 2.0f;
+
 	//Team Id interface sutff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int IdOfTeam = 0;
@@ -117,11 +120,13 @@ private:
 	IInteractable* currentInteractable;
 	IInteractable* CachedInteractable;
 	bool bIsCachedInteractableSearchBox;
-	float interactionStartTime;
+	float CumulativeInteractionProgress = 0.0f;
 	
 	void StartInteract();
 	void StopInteract();
 
+	void UpdateInteractProgress(float DeltaTime);
+	
 	void StartSpeedUp();
 	void StopSpeedUp();
 	
