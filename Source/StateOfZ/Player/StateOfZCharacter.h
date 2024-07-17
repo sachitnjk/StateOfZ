@@ -114,7 +114,8 @@ private:
 	float interactionHoldDuration;
 
 	IInteractable* currentInteractable;
-
+	IInteractable* CachedInteractable;
+	bool bIsCachedInteractableSearchBox;
 	float interactionStartTime;
 	
 	void StartInteract();

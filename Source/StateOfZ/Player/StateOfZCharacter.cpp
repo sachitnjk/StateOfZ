@@ -239,6 +239,8 @@ void AStateOfZCharacter::InteractCheck()
 				currentInteractable->OnHoverDisable();
 			}
 			currentInteractable = potentialInteractable;
+			CachedInteractable = currentInteractable;
+			bIsCachedInteractableSearchBox = hitComponent->GetClass()->IsChildOf(USearchBox::StaticClass());
 
 			currentInteractable->OnHover();
 			if(hitComponent->GetClass()->IsChildOf(USearchBox::StaticClass()) && !currentInteractable->GetOpenedStatus())
@@ -258,6 +260,8 @@ void AStateOfZCharacter::InteractCheck()
 				OnHoverChanged.Broadcast(false);
 			}
 			currentInteractable = nullptr;
+			CachedInteractable = nullptr;
+			bIsCachedInteractableSearchBox = false;
 			return;
 		}
 	}
@@ -269,6 +273,8 @@ void AStateOfZCharacter::InteractCheck()
 			OnHoverChanged.Broadcast(false);
 		}
 		currentInteractable = nullptr;
+		CachedInteractable = nullptr;
+		bIsCachedInteractableSearchBox = false;
 	}
 }
 
@@ -280,7 +286,7 @@ void AStateOfZCharacter::StartInteract()
 		{
 			OnHoverChanged.Broadcast(false);
 		}
-		if(!currentInteractable->GetOpenedStatus())
+		if(bIsCachedInteractableSearchBox && !currentInteractable->GetOpenedStatus())
 		{
 			OnSearchingChanged.Broadcast(true);
 		}
