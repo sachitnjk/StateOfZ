@@ -158,7 +158,10 @@ void AStateOfZCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		//Interacting
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AStateOfZCharacter::StartInteract);
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &AStateOfZCharacter::StopInteract);
-		
+
+		//Shift Button
+		EnhancedInputComponent->BindAction(ShiftBtnAction, ETriggerEvent::Started, this, &AStateOfZCharacter::StartSpeedUp);
+		EnhancedInputComponent->BindAction(ShiftBtnAction, ETriggerEvent::Completed, this, &AStateOfZCharacter::StopSpeedUp);
 	}
 	else
 	{
@@ -282,20 +285,20 @@ void AStateOfZCharacter::StartInteract()
 {
 	if(currentInteractable)
 	{
-	if(PlayerHUD->HoverSearchText->IsVisible())
-		{
-			OnHoverChanged.Broadcast(false);
-		}
-		if(bIsCachedInteractableSearchBox && !currentInteractable->GetOpenedStatus())
-		{
-			OnSearchingChanged.Broadcast(true);
-		}
+		if(PlayerHUD->HoverSearchText->IsVisible())
+			{
+				OnHoverChanged.Broadcast(false);
+			}
+			if(bIsCachedInteractableSearchBox && !currentInteractable->GetOpenedStatus())
+			{
+				OnSearchingChanged.Broadcast(true);
+			}
 
-		
-		currentInteractable->OnInteractStart(this);
-		bIsInteractHeld = true;
-		interactionStartTime = GetWorld()->GetTimeSeconds();
-		LockMovement();
+			
+			currentInteractable->OnInteractStart(this);
+			bIsInteractHeld = true;
+			interactionStartTime = GetWorld()->GetTimeSeconds();
+			LockMovement();
 	}
 }
 
@@ -314,6 +317,22 @@ void AStateOfZCharacter::StopInteract()
 	}
 	bIsInteractHeld = false;
 	UnlockMovement();
+}
+
+void AStateOfZCharacter::StartSpeedUp()
+{
+	if(bIsInteractHeld)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("Speed Up held"));
+	}
+}
+
+void AStateOfZCharacter::StopSpeedUp()
+{
+	if(bIsInteractHeld)
+	{
+		UE_LOG(LogTemplateCharacter, Log, TEXT("Speed Up stopped"));
+	}
 }
 
 void AStateOfZCharacter::Jump()

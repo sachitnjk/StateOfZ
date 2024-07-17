@@ -59,6 +59,9 @@ class AStateOfZCharacter : public ACharacter, public IGenericTeamAgentInterface
 	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* InteractAction;
 
+	UPROPERTY(EditAnywhere, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ShiftBtnAction;
+
 public:
 	AStateOfZCharacter();
 
@@ -78,9 +81,7 @@ public:
 
 	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
 		FVector rayDetectionPoint;
-
-	// UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
-	// 	FVector interactionRayPoint;
+	
 	UPROPERTY(EditAnywhere, meta=(MakeEditWidget=true))
 		float maxInteractRayDistance = 10.0f;
 
@@ -120,6 +121,9 @@ private:
 	
 	void StartInteract();
 	void StopInteract();
+
+	void StartSpeedUp();
+	void StopSpeedUp();
 	
 	void LockMovement();
 	void UnlockMovement();
@@ -160,6 +164,7 @@ protected:
 
 public:
 	bool bIsInteractHeld;
+	bool bIsSpeedUpHeld;
 	
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
