@@ -25,6 +25,9 @@ AInteractionBox::AInteractionBox()
 	SearchBoxComponent = CreateDefaultSubobject<USearchBox>(TEXT("SearchBoxComponent"));
 	SearchBoxComponent->SetupAttachment(SceneComponent);
 
+	BoxOpenHoverWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("BoxOpenHoverWidgetComponent"));
+	BoxOpenHoverWidgetComponent->SetupAttachment(SceneComponent);
+	
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetupAttachment(SceneComponent);
 	
@@ -36,6 +39,7 @@ void AInteractionBox::BeginPlay()
 	Super::BeginPlay();
 	SearchBoxComponent->SetUpUI(WidgetComponent);
 	SearchBoxComponent->SetUpSearchingTextUI(SearchingTextWidgetComponent);
+	SearchBoxComponent->SetUpBoxOpenedHoverUI(BoxOpenHoverWidgetComponent);
 }
 
 // Called every frame

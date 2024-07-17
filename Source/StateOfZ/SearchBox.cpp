@@ -35,17 +35,53 @@ void USearchBox::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 void USearchBox::OnHover()
 {
 	UE_LOG(LogTemplateCharacter, Log, TEXT("Hovering on this"));
-	if(PressKeyPopUpWidget != nullptr)
+	if(!isOpen)
 	{
-		PressKeyPopUpWidget->SetVisibility(true);
+		if(PressKeyPopUpWidget)
+		{
+			PressKeyPopUpWidget->SetVisibility(true);
+		}
+		if(BoxOpenedHoverWidget)
+		{
+			BoxOpenedHoverWidget->SetVisibility(false);
+		}
+	}
+	else
+	{
+		if(BoxOpenedHoverWidget)
+		{
+			BoxOpenedHoverWidget->SetVisibility(true);
+		}
+		if(PressKeyPopUpWidget)
+		{
+			PressKeyPopUpWidget->SetVisibility(false);
+		}
 	}
 }
 
 void USearchBox::OnHoverDisable()
 {
-	if (PressKeyPopUpWidget)
+	if(!isOpen)
 	{
-		PressKeyPopUpWidget->SetVisibility(false);
+		if(PressKeyPopUpWidget)
+		{
+			PressKeyPopUpWidget->SetVisibility(false);
+		}
+		if(BoxOpenedHoverWidget)
+		{
+			BoxOpenedHoverWidget->SetVisibility(false);
+		}
+	}
+	else
+	{
+		if(BoxOpenedHoverWidget)
+		{
+			BoxOpenedHoverWidget->SetVisibility(false);
+		}
+		if(PressKeyPopUpWidget)
+		{
+			PressKeyPopUpWidget->SetVisibility(false);
+		}
 	}
 }
 
@@ -142,4 +178,15 @@ void USearchBox::SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget)
 			}
 		}
 	}
+}
+
+void USearchBox::SetUpBoxOpenedHoverUI(UWidgetComponent* BoxOpenedWidget)
+{
+	if(BoxOpenedWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("The UI set up is called with a null widget on the seach box"));
+		return;	
+	}
+	BoxOpenedHoverWidget = BoxOpenedWidget;
+	BoxOpenedHoverWidget->SetVisibility(false);
 }

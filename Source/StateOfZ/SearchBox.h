@@ -37,6 +37,8 @@ public:
 	void SetUpUI(UWidgetComponent* PressKeyPopUp);
 
 	void SetUpSearchingTextUI(UWidgetComponent* SearchingTextWidget);
+
+	void SetUpBoxOpenedHoverUI(UWidgetComponent* BoxOpenedWidget);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -45,6 +47,8 @@ protected:
 
 private:
 	bool isOpen;
+
+	UWidgetComponent* BoxOpenedHoverWidget;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	UWidgetComponent* PressKeyPopUpWidget;

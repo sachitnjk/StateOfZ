@@ -115,8 +115,8 @@ void AStateOfZCharacter::Tick(float DeltaTime)
 	{
 		if(GetWorld()->GetTimeSeconds() - interactionStartTime >= interactionHoldDuration)
 		{
-			currentInteractable->OnInteractStop();
 			currentInteractable->SetOpenedStatus(true);
+			currentInteractable->OnInteractStop();
 			OnSearchingChanged.Broadcast(false);
 			bIsInteractHeld = false;
 			//change the movement lock later
