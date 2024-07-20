@@ -120,3 +120,9 @@ void AItemBase::SetUpItemIcon()
 	}
 }
 
+EItemSlotType AItemBase::GetItemSlotType()
+{
+	return ItemSlotType;
+}
+
+

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "Components/WidgetComponent.h"
+#include "StateOfZ/Eums/ItemSlotType.h"
 #include "StateOfZ/Interfaces/Interactable.h"
 #include "ItemBase.generated.h"
 
@@ -13,6 +14,9 @@ class STATEOFZ_API AItemBase : public AActor, public IInteractable
 
 public:
 	AItemBase();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	EItemSlotType ItemSlotType;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FString ItemName;
@@ -25,6 +29,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int maxItemStackCount;
+
+	UFUNCTION()
+	EItemSlotType GetItemSlotType();
 	
 	UWidgetComponent* HoverDisplayWidget;
 	
